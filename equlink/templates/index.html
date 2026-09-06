@@ -1,11 +1,218 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EQUILINK</title><link rel="stylesheet" href="/static/style.css"></head><body>
-<div id="login" class="login"><div class="login-card"><div class="logo">EQUILINK</div><p>Sistem Edukasi Keadilan Penggunaan Energi dan Air</p><input id="username" placeholder="Username"><input id="password" type="password" placeholder="Password"><button onclick="login()">Masuk</button><small>Demo: admin/admin123 · user1/user123 · user2/user123</small><div id="loginErr"></div></div></div>
-<div id="app" class="hidden"><aside><div class="brand">EQUILINK</div><div id="who"></div><nav><button data-page="dashboard">Dashboard</button><button data-page="history">History</button><button data-page="equity">Equity Billing</button><button data-page="payment">Payment</button><button data-page="education">Education</button><button data-page="ai">AI Consultant</button><button data-page="settings" id="settingsNav">Settings</button></nav><button class="logout" onclick="logout()">Keluar</button></aside><main><header><div><h1 id="title">Dashboard</h1><p id="subtitle">Monitoring realtime</p></div><span id="status">● Offline</span></header>
-<section id="dashboard" class="page"><div class="grid cards"><div class="card"><span>Room 1 Energy</span><b id="r1kwh">0</b><small>kWh</small></div><div class="card"><span>Room 2 Energy</span><b id="r2kwh">0</b><small>kWh</small></div><div class="card"><span>Water Level</span><b id="water">0</b><small>%</small></div><div class="card"><span>Active Period</span><b id="period">-</b></div></div><div class="grid two"><div class="panel"><h3>Room 1</h3><div id="r1detail"></div><div class="actions"><button onclick="relay(1,'lamp',true)">Lamp ON</button><button onclick="relay(1,'lamp',false)">Lamp OFF</button><button onclick="relay(1,'outlet',true)">Outlet ON</button><button onclick="relay(1,'outlet',false)">Outlet OFF</button></div></div><div class="panel"><h3>Room 2</h3><div id="r2detail"></div><div class="actions"><button onclick="relay(2,'lamp',true)">Lamp ON</button><button onclick="relay(2,'lamp',false)">Lamp OFF</button><button onclick="relay(2,'outlet',true)">Outlet ON</button><button onclick="relay(2,'outlet',false)">Outlet OFF</button></div></div></div></section>
-<section id="history" class="page hidden"><div class="panel"><h3>Histori Sensor</h3><table><thead><tr><th>Room</th><th>Waktu</th><th>V</th><th>A</th><th>W</th><th>kWh</th></tr></thead><tbody id="historyBody"></tbody></table></div></section>
-<section id="equity" class="page hidden"><div class="panel"><h3>Proportional Equity</h3><div id="equityBox"></div></div></section>
-<section id="payment" class="page hidden"><div class="grid two"><div class="panel" id="pay1"><h3>Payment Room 1</h3><input id="amount1" type="number" placeholder="Nominal"><button onclick="pay(1)">Catat Pembayaran</button></div><div class="panel" id="pay2"><h3>Payment Room 2</h3><input id="amount2" type="number" placeholder="Nominal"><button onclick="pay(2)">Catat Pembayaran</button></div></div><div class="panel"><h3>Riwayat Pembayaran</h3><table><thead><tr><th>Room</th><th>Nominal</th><th>Waktu</th></tr></thead><tbody id="paymentBody"></tbody></table></div></section>
-<section id="education" class="page hidden"><div class="grid two"><div class="panel"><h3>Materi Edukasi</h3><div id="lessons"></div></div><div class="panel"><h3>ECO Quiz</h3><div id="quiz"></div></div></div></section>
-<section id="ai" class="page hidden"><div class="panel"><h3>AI Consultant</h3><p>AI membaca data aktual EQUILINK untuk memberikan edukasi dan rekomendasi.</p><div id="chat"></div><div class="chatrow"><input id="question" placeholder="Contoh: mengapa tagihan saya naik?"><button onclick="askAI()">Analisis</button></div></div></section>
-<section id="settings" class="page hidden"><div class="panel"><h3>Billing Period</h3><p>Menutup periode aktif tidak menghapus histori lama.</p><button onclick="newPeriod()">Close Period & Start New Period</button></div></section>
-</main></div><script src="/static/app.js"></script></body></html>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EQUILINK</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login" class="login">
+    <div class="login-card">
+        <div class="brand-mark"><i class="fa-solid fa-scale-balanced"></i></div>
+        <div class="logo">EQUILINK</div>
+        <p>Sistem Edukasi Keadilan Penggunaan Energi &amp; Air berbasis IoT + AI</p>
+        <input id="username" placeholder="Username">
+        <input id="password" type="password" placeholder="Password">
+        <button class="btn-primary" style="width:100%; padding:.7rem;" onclick="login()">Masuk</button>
+        <div id="loginErr"></div>
+        <small>Demo: admin/admin123 · user1/user123 · user2/user123</small>
+    </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden app-shell">
+    <aside>
+        <div class="brand"><span class="dot-mark"><i class="fa-solid fa-scale-balanced"></i></span> EQUILINK</div>
+        <div id="who">-</div>
+        <nav>
+            <button data-page="dashboard" class="active"><i class="fa-solid fa-grid-2" style="width:16px;"></i> Dashboard</button>
+            <button data-page="history"><i class="fa-solid fa-clock-rotate-left" style="width:16px;"></i> History</button>
+            <button data-page="equity"><i class="fa-solid fa-scale-balanced" style="width:16px;"></i> Equity Billing</button>
+            <button data-page="payment"><i class="fa-solid fa-credit-card" style="width:16px;"></i> Payment</button>
+            <button data-page="education"><i class="fa-solid fa-graduation-cap" style="width:16px;"></i> Education</button>
+            <button data-page="ai"><i class="fa-solid fa-brain" style="width:16px;"></i> AI Consultant</button>
+            <button data-page="settings" id="settingsNav"><i class="fa-solid fa-sliders" style="width:16px;"></i> Settings</button>
+        </nav>
+        <button class="logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+    </aside>
+
+    <main>
+        <header>
+            <div>
+                <h1 id="title">Dashboard</h1>
+                <p id="subtitle">Monitoring realtime konsumsi listrik &amp; air</p>
+            </div>
+            <div style="text-align:right;">
+                <span id="status">● Offline</span>
+                <p id="period">-</p>
+            </div>
+        </header>
+
+        <!-- ===== DASHBOARD ===== -->
+        <section id="dashboard" class="page active">
+            <div class="grid cards">
+                <div class="card"><div class="stat-icon"><i class="fa-solid fa-bolt"></i></div><div class="stat-body"><span>Room 1 Energy</span><b id="r1kwh">0</b><small>kWh</small></div></div>
+                <div class="card"><div class="stat-icon"><i class="fa-solid fa-bolt"></i></div><div class="stat-body"><span>Room 2 Energy</span><b id="r2kwh">0</b><small>kWh</small></div></div>
+                <div class="card"><div class="stat-icon"><i class="fa-solid fa-droplet"></i></div><div class="stat-body"><span>Water Level</span><b id="water">0</b><small>%</small></div></div>
+                <div class="card"><div class="stat-icon"><i class="fa-solid fa-calendar-days"></i></div><div class="stat-body"><span>Active Period</span><b id="periodName" style="font-size:.95rem;">-</b></div></div>
+            </div>
+
+            <div class="grid two">
+                <div class="panel room-card" data-room="1">
+                    <div class="head">
+                        <div><h3>Room 1</h3><p style="color:var(--muted); font-size:.75rem; margin-top:.2rem;">Utility Monitor</p></div>
+                        <span id="r1status" class="pill pill-belum">BELUM BAYAR</span>
+                    </div>
+                    <div class="readout-row">
+                        <div class="readout-tile"><p class="rlabel">VOLTAGE</p><p class="rvalue meter-font"><span id="r1volt">0.0</span><span class="runit">V</span></p></div>
+                        <div class="readout-tile"><p class="rlabel">CURRENT</p><p class="rvalue meter-font"><span id="r1amp">0.00</span><span class="runit">A</span></p></div>
+                    </div>
+                    <div class="mini-row">
+                        <div class="mini-stat"><p class="mlabel">DAYA</p><p class="mvalue"><span id="r1watt">0.0</span> W</p></div>
+                        <div class="mini-stat"><p class="mlabel">TAGIHAN</p><p class="mvalue" id="r1cost">Rp 0</p></div>
+                    </div>
+                    <div class="relay-row">
+                        <span class="relay-label"><i class="fa-solid fa-lightbulb" style="color:var(--amber);"></i> Lampu</span>
+                        <div class="relay-btns">
+                            <button class="btn-primary" onclick="relay(1,'lamp',true)">ON</button>
+                            <button class="btn-off" onclick="relay(1,'lamp',false)">OFF</button>
+                        </div>
+                    </div>
+                    <div class="relay-row">
+                        <span class="relay-label"><i class="fa-solid fa-plug" style="color:var(--navy-900);"></i> Outlet</span>
+                        <div class="relay-btns">
+                            <button class="btn-primary" onclick="relay(1,'outlet',true)">ON</button>
+                            <button class="btn-off" onclick="relay(1,'outlet',false)">OFF</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel room-card" data-room="2">
+                    <div class="head">
+                        <div><h3>Room 2</h3><p style="color:var(--muted); font-size:.75rem; margin-top:.2rem;">Utility Monitor</p></div>
+                        <span id="r2status" class="pill pill-belum">BELUM BAYAR</span>
+                    </div>
+                    <div class="readout-row">
+                        <div class="readout-tile"><p class="rlabel">VOLTAGE</p><p class="rvalue meter-font"><span id="r2volt">0.0</span><span class="runit">V</span></p></div>
+                        <div class="readout-tile"><p class="rlabel">CURRENT</p><p class="rvalue meter-font"><span id="r2amp">0.00</span><span class="runit">A</span></p></div>
+                    </div>
+                    <div class="mini-row">
+                        <div class="mini-stat"><p class="mlabel">DAYA</p><p class="mvalue"><span id="r2watt">0.0</span> W</p></div>
+                        <div class="mini-stat"><p class="mlabel">TAGIHAN</p><p class="mvalue" id="r2cost">Rp 0</p></div>
+                    </div>
+                    <div class="relay-row">
+                        <span class="relay-label"><i class="fa-solid fa-lightbulb" style="color:var(--amber);"></i> Lampu</span>
+                        <div class="relay-btns">
+                            <button class="btn-primary" onclick="relay(2,'lamp',true)">ON</button>
+                            <button class="btn-off" onclick="relay(2,'lamp',false)">OFF</button>
+                        </div>
+                    </div>
+                    <div class="relay-row">
+                        <span class="relay-label"><i class="fa-solid fa-plug" style="color:var(--navy-900);"></i> Outlet</span>
+                        <div class="relay-btns">
+                            <button class="btn-primary" onclick="relay(2,'outlet',true)">ON</button>
+                            <button class="btn-off" onclick="relay(2,'outlet',false)">OFF</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3><i class="fa-solid fa-faucet-drip" style="color:var(--cyan); margin-right:.4rem;"></i>Tangki Air</h3>
+                <div class="grid two" style="align-items:center;">
+                    <div class="tank"><div id="waterTank" class="tank-liquid" style="height:0%;"></div></div>
+                    <div>
+                        <p style="color:var(--muted); font-size:.8rem; margin:0 0 .3rem;">Kapasitas tangki saat ini</p>
+                        <p class="meter-font" style="font-size:1.6rem; font-weight:700; color:var(--cyan);"><span id="waterPct">0</span>%</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== HISTORY ===== -->
+        <section id="history" class="page">
+            <div class="panel">
+                <h3>Histori Sensor (200 terakhir)</h3>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead><tr><th>Room</th><th>Waktu</th><th>V</th><th>A</th><th>W</th><th>kWh</th></tr></thead>
+                        <tbody id="historyBody"><tr><td colspan="6" style="text-align:center; color:var(--muted); font-style:italic;">Memuat...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== EQUITY BILLING ===== -->
+        <section id="equity" class="page">
+            <div class="panel">
+                <h3>Proportional Equity — Pembagian Biaya Berbasis Pemakaian Aktual</h3>
+                <div id="equityBox">Memuat data equity…</div>
+            </div>
+        </section>
+
+        <!-- ===== PAYMENT ===== -->
+        <section id="payment" class="page">
+            <div class="grid two">
+                <div class="panel" id="pay1" data-room="1">
+                    <h3>Payment Room 1</h3>
+                    <input id="amount1" type="number" placeholder="Nominal pembayaran (Rp)">
+                    <button class="btn-primary" style="width:100%; margin-top:.6rem;" onclick="pay(1)">Catat Pembayaran</button>
+                </div>
+                <div class="panel" id="pay2" data-room="2">
+                    <h3>Payment Room 2</h3>
+                    <input id="amount2" type="number" placeholder="Nominal pembayaran (Rp)">
+                    <button class="btn-primary" style="width:100%; margin-top:.6rem;" onclick="pay(2)">Catat Pembayaran</button>
+                </div>
+            </div>
+            <div class="panel">
+                <h3>Riwayat Pembayaran</h3>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead><tr><th>Room</th><th>Nominal</th><th>Waktu</th><th>Catatan</th></tr></thead>
+                        <tbody id="paymentBody"><tr><td colspan="4" style="text-align:center; color:var(--muted); font-style:italic;">Belum ada riwayat.</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== EDUCATION ===== -->
+        <section id="education" class="page">
+            <div class="grid two">
+                <div class="panel"><h3>Materi Edukasi</h3><div id="lessons">Memuat…</div></div>
+                <div class="panel"><h3>ECO Quiz</h3><div id="quiz">Memuat…</div></div>
+            </div>
+        </section>
+
+        <!-- ===== AI CONSULTANT ===== -->
+        <section id="ai" class="page">
+            <div class="panel">
+                <h3><i class="fa-solid fa-brain" style="color:var(--violet); margin-right:.4rem;"></i>AI Consultant</h3>
+                <p style="color:var(--muted); font-size:.82rem; margin:-.4rem 0 .9rem;">AI membaca data aktual EQUILINK (energi, tagihan, level air) untuk memberi edukasi dan rekomendasi — bukan menebak-nebak.</p>
+                <div id="chat" class="chatbox">
+                    <div class="msg ai"><b>EQUILINK AI:</b> Halo! Tanyakan apa saja seputar tagihan, efisiensi, atau keadilan pembagian biaya Anda.</div>
+                </div>
+                <div class="chatrow">
+                    <input id="question" placeholder="Contoh: mengapa tagihan saya naik?" onkeypress="if(event.key==='Enter')askAI()">
+                    <button class="btn-primary" onclick="askAI()"><i class="fa-solid fa-paper-plane"></i> Analisis</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== SETTINGS (admin) ===== -->
+        <section id="settings" class="page">
+            <div class="panel">
+                <h3>Billing Period</h3>
+                <p style="color:var(--muted); font-size:.82rem; margin:0 0 .8rem;">Menutup periode aktif tidak menghapus histori lama — hanya memulai perhitungan tagihan baru.</p>
+                <button class="btn-primary" onclick="newPeriod()"><i class="fa-solid fa-rotate"></i> Close Period &amp; Start New Period</button>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
