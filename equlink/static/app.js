@@ -37,10 +37,8 @@ async function logout() {
     location.reload();
 }
 
-// Ruangan yang tidak diizinkan untuk role user dihapus dari DOM (dashboard & payment)
-// — bukan cuma disembunyikan lewat CSS, supaya tidak bisa dibuka lewat DevTools sekalipun.
-// Server (app.py) tetap jadi lapisan pertahanan utama: /api/payment & /api/relay menolak
-// akses ke ruangan yang bukan milik user meski request dipaksa dari console.
+// Ruangan yang tidak diizinkan untuk role user dihapus dari DOM (kartu dashboard & form payment)
+// — server (app.py) tetap jadi lapisan pertahanan utama lewat room_allowed().
 function applyAccess() {
     if (me.role === 'admin') return;
     const otherRoom = me.room === 1 ? 2 : 1;
@@ -53,12 +51,26 @@ function nav(page) {
     $(page)?.classList.add('active');
     document.querySelectorAll('aside nav button').forEach(x => x.classList.remove('active'));
     document.querySelector(`[data-page="${page}"]`)?.classList.add('active');
-    const titles = { dashboard: 'Dashboard', history: 'History', equity: 'Equity Billing', payment: 'Payment', education: 'Education', ai: 'AI Consultant', settings: 'Settings' };
+    const titles = { dashboard: 'Dashboard', payment: 'Payment', education: 'Education', settings: 'Settings' };
     $('title').textContent = titles[page] || page;
+    closeSidebar(); // di mobile, pilih menu langsung menutup sidebar
 }
-document.querySelectorAll('aside nav button').forEach(b => b.onclick = () => nav(b.dataset.page));
 
-// ============ DASHBOARD ============
+// ============ SIDEBAR MOBILE (hamburger) ============
+function toggleSidebar() {
+    const isOpen = $('sidebar').classList.contains('open');
+    if (isOpen) closeSidebar(); else openSidebar();
+}
+function openSidebar() {
+    $('sidebar').classList.add('open');
+    document.body.classList.add('sidebar-open');
+}
+function closeSidebar() {
+    $('sidebar').classList.remove('open');
+    document.body.classList.remove('sidebar-open');
+}
+
+// ============ DASHBOARD (Room Monitoring + Water + Equity + History + AI, semua di satu halaman) ============
 async function refreshAll() {
     try {
         state = await api('/api/state');
@@ -92,7 +104,7 @@ async function refreshAll() {
 
 function renderRoom(r) {
     const d = state.rooms[String(r)];
-    if (!d) return; // ruangan ini tidak diizinkan untuk user saat ini (server tidak mengirim datanya)
+    if (!d) return; // ruangan ini tidak diizinkan untuk user saat ini (elemen sudah dihapus applyAccess)
 
     $(`r${r}volt`).textContent = d.sensor.voltage.toFixed(1);
     $(`r${r}amp`).textContent = d.sensor.current.toFixed(2);
@@ -106,7 +118,7 @@ function renderRoom(r) {
     }
 }
 
-// ============ HISTORY ============
+// ============ HISTORY (bagian dari Dashboard) ============
 async function history() {
     const d = await api('/api/history');
     $('historyBody').innerHTML = d.rows.length ? d.rows.map(x => `
@@ -155,7 +167,7 @@ async function relay(room, device, on) {
     }
 }
 
-// ============ EQUITY ============
+// ============ EQUITY (bagian dari Dashboard) ============
 async function equity() {
     const d = await api('/api/equity');
     $('equityBox').innerHTML = `
@@ -204,18 +216,44 @@ function answer(i, a) {
         : '<p class="bad">Belum tepat. Coba pahami perbandingan konsumsi aktual.</p>';
 }
 
-// ============ AI CONSULTANT ============
+// ============ AI CONSULTANT & CHATBOT (bagian dari Dashboard) ============
+function appendChat(role, html) {
+    const box = $('chat');
+    const div = document.createElement('div');
+    div.className = 'msg ' + role;
+    div.innerHTML = html;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
+    return div;
+}
+
 async function askAI() {
     const q = $('question').value.trim();
     if (!q) return;
-    $('chat').innerHTML += `<div class="msg user"><b>Anda:</b> ${escapeHtml(q)}</div>`;
+    appendChat('user', `<b>Anda:</b> ${escapeHtml(q)}`);
     $('question').value = '';
-    $('chat').scrollTop = $('chat').scrollHeight;
     try {
         const d = await api('/api/ai', { method: 'POST', body: JSON.stringify({ query: q }) });
-        $('chat').innerHTML += `<div class="msg ai"><b>EQUILINK AI:</b> ${escapeHtml(d.answer).replace(/\n/g, '<br>')}</div>`;
+        appendChat('ai', `<b>EQUILINK AI:</b> ${escapeHtml(d.answer).replace(/\n/g, '<br>')}`);
     } catch (e) {
-        $('chat').innerHTML += `<div class="msg bad">${escapeHtml(e.message)}</div>`;
+        appendChat('bad', escapeHtml(e.message));
     }
-    $('chat').scrollTop = $('chat').scrollHeight;
+}
+
+// Tombol "Analisis Otomatis" — mengirim pertanyaan baku ke AI supaya user tidak perlu mengetik apa pun.
+async function analyzeAuto() {
+    const btn = $('btnAnalyze');
+    btn.disabled = true;
+    const loading = appendChat('ai', '<b>EQUILINK AI:</b> ⏳ Menganalisis efisiensi energi & air Anda...');
+    try {
+        const d = await api('/api/ai', {
+            method: 'POST',
+            body: JSON.stringify({ query: 'Berikan analisis singkat (2 paragraf) mengenai efisiensi penggunaan listrik dan air saya saat ini, beserta rekomendasi hemat energi dan estimasi tagihan bulanan.' })
+        });
+        loading.innerHTML = `<b>Analisis Otomatis AI:</b> ${escapeHtml(d.answer).replace(/\n/g, '<br>')}`;
+    } catch (e) {
+        loading.className = 'msg bad';
+        loading.innerHTML = escapeHtml(e.message);
+    }
+    btn.disabled = false;
 }
