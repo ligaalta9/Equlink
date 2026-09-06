@@ -11,8 +11,1091 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Stylesheet Eksternal -->
-  <link rel="stylesheet" href="style.css">
+  <style>
+    /* =========================================================
+       EQUILINK — STYLESHEET TERPADU (INTERNAL CSS)
+       ========================================================= */
+    :root {
+      --bg-app: #F3F6FA;
+      --surface: #FFFFFF;
+      --surface-subtle: #F8FAFC;
+      --border: #E5E9F0;
+      --border-light: #F1F4F9;
+      
+      --text-main: #1E293B;
+      --text-muted: #64748B;
+      --text-light: #94A3B8;
+
+      --brand-blue: #0284C7;
+      --brand-navy: #0E294B;
+      --brand-gradient: linear-gradient(135deg, #0E294B 0%, #0284C7 100%);
+      
+      --emerald: #10B981;
+      --emerald-soft: #DCFCE7;
+      --amber: #F59E0B;
+      --amber-soft: #FEF3C7;
+      --rose: #EF4444;
+      --rose-soft: #FEE2E2;
+      --purple: #8B5CF6;
+      --purple-soft: #EDE9FE;
+      --cyan: #06B6D4;
+      --cyan-soft: #E0F2FE;
+
+      --sidebar-w: 260px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --shadow-sm: 0 4px 20px -2px rgba(15, 41, 75, 0.05);
+      --shadow-md: 0 10px 25px -4px rgba(15, 41, 75, 0.08);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-app);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .meter-font { font-family: 'JetBrains Mono', monospace; }
+    .hidden { display: none !important; }
+
+    /* ================= LOGIN SCREEN ================= */
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background: radial-gradient(circle at 10% 20%, rgba(2, 132, 199, 0.08), transparent 45%),
+                  radial-gradient(circle at 90% 80%, rgba(14, 41, 75, 0.06), transparent 45%),
+                  var(--bg-app);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--surface);
+      border-radius: 28px;
+      padding: 2.75rem 2.25rem 2.25rem;
+      box-shadow: 0 20px 45px -15px rgba(14, 41, 75, 0.12);
+      border: 1px solid rgba(229, 233, 240, 0.8);
+      text-align: center;
+    }
+
+    .login-logo-badge {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--brand-navy), var(--brand-blue));
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 8px 18px rgba(2, 132, 199, 0.3);
+    }
+
+    .login-title {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--brand-navy);
+      letter-spacing: -0.02em;
+    }
+
+    .login-subtitle {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-control {
+      width: 100%;
+      background: #FAFCFF;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: var(--brand-blue);
+      background: #FFF;
+      box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.12);
+    }
+
+    .btn-login {
+      width: 100%;
+      background: linear-gradient(90deg, #103B64 0%, #0284C7 100%);
+      color: #FFF;
+      border: none;
+      padding: 0.85rem;
+      font-size: 0.92rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 8px 20px -4px rgba(2, 132, 199, 0.4);
+    }
+
+    .btn-login:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px -4px rgba(2, 132, 199, 0.5);
+    }
+
+    .login-error {
+      color: var(--rose);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 0.75rem;
+      min-height: 1.2rem;
+    }
+
+    .login-footer-info {
+      margin-top: 2rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border-light);
+      text-align: left;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .login-footer-info b { color: var(--brand-navy); }
+    .credential-link { color: var(--brand-blue); font-weight: 600; text-decoration: none; }
+
+    /* ================= APP LAYOUT ================= */
+    .app-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    aside.sidebar {
+      width: var(--sidebar-w);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      padding: 1.75rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      z-index: 50;
+      transition: transform 0.25s ease;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0 0.5rem 2rem 0.5rem;
+    }
+
+    .sidebar-logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--brand-navy), var(--brand-blue));
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+    }
+
+    .sidebar-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--brand-navy);
+      letter-spacing: -0.01em;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      flex: 1;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 0.75rem 1rem;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+      width: 100%;
+    }
+
+    .nav-link i { width: 18px; font-size: 1rem; }
+    .nav-link:hover {
+      background: #F1F5F9;
+      color: var(--brand-navy);
+    }
+
+    .nav-link.active {
+      background: #EBF5FB;
+      color: #0284C7;
+      border-color: rgba(2, 132, 199, 0.2);
+    }
+
+    .sidebar-user {
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .user-profile-card {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0.75rem;
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 0.75rem;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: #0E294B;
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+    }
+
+    .user-meta-name {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--brand-navy);
+    }
+
+    .user-meta-role {
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .btn-logout {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      color: var(--text-main);
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 0.65rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-logout:hover {
+      border-color: var(--rose);
+      color: var(--rose);
+      background: var(--rose-soft);
+    }
+
+    main.main-viewport {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      padding: 2rem 2.5rem 3.5rem;
+      min-width: 0;
+    }
+
+    .top-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      gap: 1rem;
+    }
+
+    .header-left h1 {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--brand-navy);
+      letter-spacing: -0.02em;
+    }
+
+    .header-left p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      background: var(--emerald-soft);
+      color: var(--emerald);
+    }
+
+    .date-badge {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .stats-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .summary-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.15rem 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .summary-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .summary-icon.navy { background: #0E294B; color: #FFF; }
+    .summary-icon.emerald { background: var(--emerald-soft); color: var(--emerald); }
+    .summary-icon.amber { background: var(--amber-soft); color: var(--amber); }
+    .summary-icon.purple { background: var(--purple-soft); color: var(--purple); }
+
+    .summary-details span {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .summary-details b {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--brand-navy);
+    }
+
+    .section-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+
+    .section-header-bar h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--brand-navy);
+    }
+
+    .section-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .pill-btn:hover { background: #F1F5F9; color: var(--brand-navy); }
+    .pill-btn.btn-reset { border-color: rgba(239, 68, 68, 0.3); color: var(--rose); background: #FFF; }
+    .pill-btn.btn-reset:hover { background: var(--rose-soft); }
+
+    .rooms-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .room-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .room-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 1.1rem;
+    }
+
+    .room-card-header h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--brand-navy);
+    }
+
+    .room-card-header p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.15rem;
+    }
+
+    .listening-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: #0284C7;
+      background: #E0F2FE;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      letter-spacing: 0.03em;
+    }
+
+    .readout-duo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .dark-readout-tile {
+      background: linear-gradient(170deg, #0B2239 0%, #0F3255 100%);
+      border-radius: 14px;
+      padding: 0.85rem 1rem;
+      color: #FFF;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .dark-readout-tile .metric-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: rgba(255, 255, 255, 0.55);
+      text-transform: uppercase;
+    }
+
+    .dark-readout-tile .metric-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-top: 0.2rem;
+      color: #F8FAFC;
+    }
+
+    .dark-readout-tile .metric-unit {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin-left: 0.15rem;
+    }
+
+    .mini-metrics-duo {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .mini-metric-card {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.65rem 0.85rem;
+    }
+
+    .mini-metric-card .label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .mini-metric-card .val {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--brand-navy);
+      margin-top: 0.2rem;
+    }
+
+    .load-bar-wrapper {
+      margin-bottom: 1.1rem;
+    }
+
+    .load-bar-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .load-bar-track {
+      width: 100%;
+      height: 7px;
+      background: #E2E8F0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .load-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #0284C7, #06B6D4);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+
+    .cost-split-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.15rem;
+      padding-bottom: 1.1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cost-item {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.65rem 0.85rem;
+    }
+
+    .cost-item .title {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .cost-item .cost-val {
+      font-size: 0.98rem;
+      font-weight: 800;
+      color: var(--brand-navy);
+      margin-top: 0.15rem;
+    }
+
+    /* SAKLAR SLIDE BOLA (BALL SLIDER TOGGLE) */
+    .relay-control-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.55rem 0;
+    }
+
+    .relay-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--brand-navy);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .switch-slide-bola {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+    }
+
+    .switch-slide-bola input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .ball-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #CBD5E1;
+      transition: .25s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 34px;
+    }
+
+    .ball-slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .25s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.22);
+    }
+
+    .switch-slide-bola input:checked + .ball-slider {
+      background: linear-gradient(90deg, #0EA5E9, #0284C7);
+    }
+
+    .switch-slide-bola input:checked + .ball-slider:before {
+      transform: translateX(22px);
+    }
+
+    .panel-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+    }
+
+    .panel-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+
+    .panel-card-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .panel-card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+    }
+
+    .panel-card-icon.cyan { background: var(--cyan-soft); color: var(--cyan); }
+    .panel-card-icon.purple { background: var(--purple-soft); color: var(--purple); }
+    .panel-card-icon.emerald { background: var(--emerald-soft); color: var(--emerald); }
+
+    .tank-monitoring-content {
+      display: grid;
+      grid-template-columns: 1.2fr 2fr 1.5fr;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .tank-sensor-metric .label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .tank-sensor-metric .val {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #0284C7;
+    }
+
+    .tank-visual-container {
+      text-align: center;
+    }
+
+    .tank-box {
+      position: relative;
+      width: 100%;
+      height: 95px;
+      background: #F1F5F9;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .tank-water-fill {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 0%;
+      background: linear-gradient(180deg, #38BDF8 0%, #0284C7 100%);
+      transition: height 0.8s ease;
+    }
+
+    .tank-percentage-text {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    .tank-cost-block .label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .tank-cost-block .val {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--brand-navy);
+    }
+
+    .tank-cost-block .sub {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      margin-top: 0.2rem;
+    }
+
+    .history-table-wrapper {
+      overflow-x: auto;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    table.equilink-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    table.equilink-table th {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      padding: 0.75rem 0.65rem;
+      border-bottom: 1.5px solid var(--border);
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    table.equilink-table td {
+      font-size: 0.8rem;
+      padding: 0.8rem 0.65rem;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--text-main);
+    }
+
+    table.equilink-table tr:hover td {
+      background: #F8FAFC;
+    }
+
+    .ai-chatbox {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.15rem;
+      height: 220px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .chat-bubble {
+      padding: 0.85rem 1.1rem;
+      border-radius: 14px;
+      font-size: 0.85rem;
+      line-height: 1.55;
+      max-width: 85%;
+    }
+
+    .chat-bubble.ai {
+      background: #F0FDF4;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: #065F46;
+      align-self: flex-start;
+    }
+
+    .chat-bubble.user {
+      background: var(--brand-navy);
+      color: #FFF;
+      align-self: flex-end;
+    }
+
+    .ai-input-row {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .ai-input-row input {
+      flex: 1;
+      background: #FFF;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1rem;
+      font-size: 0.88rem;
+      outline: none;
+      transition: all 0.15s;
+    }
+
+    .ai-input-row input:focus {
+      border-color: #0284C7;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+    }
+
+    .btn-gradient-blue {
+      background: linear-gradient(90deg, #0F3255 0%, #0284C7 100%);
+      color: #FFF;
+      border: none;
+      padding: 0.7rem 1.25rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .btn-gradient-blue:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(2, 132, 199, 0.35);
+    }
+
+    .settings-grid, .payment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .config-card, .payment-room-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .config-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--brand-navy);
+      margin-bottom: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .rate-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .rate-row:last-child { border-bottom: none; }
+    .rate-row .label { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
+    .rate-row .value { font-size: 0.95rem; font-weight: 800; color: var(--brand-navy); }
+
+    .accounts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .account-card {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+    }
+
+    .account-card .role-badge {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .account-card .access-desc {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--brand-navy);
+      margin-top: 0.35rem;
+    }
+
+    .payment-room-card h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--brand-navy);
+      margin-bottom: 1rem;
+    }
+
+    .payment-stat-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .payment-stat-line.sisa {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--amber);
+      margin-bottom: 1.1rem;
+    }
+
+    .lessons-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .lesson-item {
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .lesson-item:last-child { border-bottom: none; }
+    .lesson-item b {
+      display: block;
+      font-size: 0.95rem;
+      color: var(--brand-navy);
+      margin-bottom: 0.35rem;
+    }
+
+    .lesson-item p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .quiz-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+
+    .quiz-opt-btn {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      background: #F8FAFC;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .quiz-opt-btn:hover {
+      background: #EBF5FB;
+      border-color: #0284C7;
+      color: var(--brand-navy);
+    }
+
+    .mobile-hamburger {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--brand-navy);
+      align-items: center;
+      justify-content: center;
+      font-size: 1.15rem;
+      cursor: pointer;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(14, 41, 75, 0.4);
+      z-index: 45;
+    }
+
+    @media (max-width: 1024px) {
+      .stats-summary-grid { grid-template-columns: repeat(2, 1fr); }
+      .tank-monitoring-content { grid-template-columns: 1fr; gap: 1rem; }
+      .accounts-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 860px) {
+      aside.sidebar { transform: translateX(-100%); }
+      aside.sidebar.open { transform: translateX(0); }
+      body.sidebar-open .sidebar-overlay { display: block; }
+      .mobile-hamburger { display: flex; }
+      main.main-viewport { margin-left: 0; padding: 1.25rem 1rem; }
+      .rooms-grid, .settings-grid, .payment-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
@@ -52,7 +1135,7 @@
     <!-- Sidebar Overlay untuk Mobile -->
     <div id="sidebarOverlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
 
-    <!-- SIDEBAR: Dashboard, Edukasi, Payment, Settings -->
+    <!-- SIDEBAR -->
     <aside id="mainSidebar" class="sidebar">
       <div class="sidebar-brand">
         <div class="sidebar-logo"><i class="fa-solid fa-scale-balanced"></i></div>
@@ -599,7 +1682,431 @@
     </main>
   </div>
 
-  <!-- Script Eksternal -->
-  <script src="app.js"></script>
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    let currentUser = null;
+    let telemetryTimer = null;
+
+    let localData = {
+      period: 'September 2026',
+      transactions: [],
+      historyLogs: [],
+      rooms: {
+        '1': {
+          voltage: 220.4,
+          current: 0.00,
+          power: 0.0,
+          energy_kwh: 0.000,
+          lamp: false,
+          powerSw: false,
+          paid: 0,
+          cost_elec: 0,
+          cost_water: 0
+        },
+        '2': {
+          voltage: 220.8,
+          current: 0.00,
+          power: 0.0,
+          energy_kwh: 0.000,
+          lamp: false,
+          powerSw: false,
+          paid: 0,
+          cost_elec: 0,
+          cost_water: 0
+        }
+      },
+      water: {
+        distance_cm: 18.5,
+        height_cm: 23,
+        level_percent: 45,
+        pump: 'IDLE',
+        total_cost: 0
+      }
+    };
+
+    const $ = id => document.getElementById(id);
+    const formatRp = num => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num || 0);
+
+    function formatDateNow() {
+      const d = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'short', day: '2-digit' };
+      return d.toLocaleDateString('id-ID', options);
+    }
+
+    const dateEl = $('currentDateStr');
+    if (dateEl) dateEl.textContent = formatDateNow();
+
+    function fillLogin(u, p) {
+      $('loginUser').value = u;
+      $('loginPass').value = p;
+    }
+
+    async function handleLogin() {
+      const u = $('loginUser').value.trim();
+      const p = $('loginPass').value.trim();
+      $('loginErrMsg').textContent = '';
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: u, password: p })
+        }).catch(() => null);
+
+        if (res && res.ok) {
+          const json = await res.json();
+          currentUser = json.user;
+        } else {
+          if (u === 'admin' && p === 'admin123') {
+            currentUser = { username: 'ADMIN', role: 'admin' };
+          } else if (u === 'user1' && p === 'user123') {
+            currentUser = { username: 'USER1', role: 'user', room: 1 };
+          } else if (u === 'user2' && p === 'user123') {
+            currentUser = { username: 'USER2', role: 'user', room: 2 };
+          } else {
+            throw new Error('Username atau password tidak cocok.');
+          }
+        }
+
+        $('loginSection').classList.add('hidden');
+        $('appSection').classList.remove('hidden');
+
+        $('loggedUserName').textContent = currentUser.username;
+        $('loggedUserRole').textContent = currentUser.role === 'admin' ? 'ADMINISTRATOR' : `ROOM ${currentUser.room}`;
+
+        if (currentUser.role !== 'admin') {
+          const setBtn = $('settingsNavBtn');
+          if (setBtn) setBtn.classList.add('hidden');
+          const otherRoom = currentUser.room === 1 ? 2 : 1;
+          document.querySelectorAll(`[data-room="${otherRoom}"]`).forEach(el => el.style.display = 'none');
+          $('statTotalRooms').textContent = '1';
+        }
+
+        refreshDashboard();
+        telemetryTimer = setInterval(updateTelemetrySim, 3000);
+
+      } catch (err) {
+        $('loginErrMsg').textContent = err.message || 'Login gagal';
+      }
+    }
+
+    function handleLogout() {
+      if (telemetryTimer) clearInterval(telemetryTimer);
+      fetch('/api/logout', { method: 'POST' }).catch(() => {});
+      location.reload();
+    }
+
+    function navTo(pageKey) {
+      document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.querySelector(`[data-nav="${pageKey}"]`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      document.querySelectorAll('.app-page').forEach(pg => pg.classList.add('hidden'));
+      const activePage = $(`page-${pageKey}`);
+      if (activePage) activePage.classList.remove('hidden');
+
+      const headings = {
+        dashboard: { title: 'Dashboard', sub: 'Monitoring realtime konsumsi listrik & air gedung' },
+        education: { title: 'Education & Equity', sub: 'Modul literasi hemat energi dan keadilan konsumsi bersama' },
+        payment: { title: 'Payment & Billing', sub: 'Pencatatan pembayaran tagihan & histori transaksi' },
+        settings: { title: 'Room Settings', sub: 'Konfigurasi tarif, kredensial, dan koneksi IoT' }
+      };
+
+      const meta = headings[pageKey] || { title: pageKey, sub: '' };
+      $('pageHeading').textContent = meta.title;
+      $('pageSubheading').textContent = meta.sub;
+
+      closeSidebar();
+    }
+
+    function toggleSidebar() {
+      $('mainSidebar').classList.toggle('open');
+      document.body.classList.toggle('sidebar-open');
+    }
+
+    function closeSidebar() {
+      $('mainSidebar').classList.remove('open');
+      document.body.classList.remove('sidebar-open');
+    }
+
+    async function toggleRelay(room, device, state) {
+      localData.rooms[String(room)][device === 'lamp' ? 'lamp' : 'powerSw'] = state;
+
+      await fetch('/api/relay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ room, device, state })
+      }).catch(() => {});
+
+      calculateInstantLoad(room);
+    }
+
+    function calculateInstantLoad(room) {
+      const r = localData.rooms[String(room)];
+      let watt = 0;
+      if (r.lamp) watt += 45 + Math.random() * 5;
+      if (r.powerSw) watt += 180 + Math.random() * 20;
+
+      r.power = watt;
+      r.current = watt > 0 ? (watt / r.voltage) : 0;
+      updateRoomUI(room);
+    }
+
+    function updateTelemetrySim() {
+      [1, 2].forEach(rm => {
+        const r = localData.rooms[String(rm)];
+        r.voltage = 220 + (Math.random() * 3 - 1.5);
+        if (r.lamp || r.powerSw) {
+          calculateInstantLoad(rm);
+          r.energy_kwh += (r.power / 1000) * (3 / 3600);
+          r.cost_elec = r.energy_kwh * 1444.70;
+        } else {
+          r.power = 0;
+          r.current = 0;
+        }
+        updateRoomUI(rm);
+      });
+
+      const w = localData.water;
+      w.distance_cm = Math.max(2, Math.min(23, (w.distance_cm + (Math.random() * 0.4 - 0.2))));
+      w.level_percent = Math.round(((w.height_cm - w.distance_cm) / w.height_cm) * 100);
+      w.total_cost = 12500 + Math.round(w.level_percent * 40);
+      localData.rooms['1'].cost_water = w.total_cost / 2;
+      localData.rooms['2'].cost_water = w.total_cost / 2;
+
+      updateTankUI();
+
+      if (Math.random() > 0.6) {
+        pushHistoryRow();
+      }
+    }
+
+    function updateRoomUI(rm) {
+      const r = localData.rooms[String(rm)];
+      const vEl = $(`r${rm}_volt`);
+      if (!vEl) return;
+
+      vEl.textContent = r.voltage.toFixed(1);
+      $(`r${rm}_amp`).textContent = r.current.toFixed(2);
+      $(`r${rm}_watt`).textContent = r.power.toFixed(1);
+      $(`r${rm}_kwh`).textContent = r.energy_kwh.toFixed(3);
+
+      $(`r${rm}_cost_elec`).textContent = formatRp(r.cost_elec);
+      $(`r${rm}_cost_water`).textContent = formatRp(r.cost_water);
+
+      const pct = Math.min(100, Math.max(0, (r.power / 900) * 100));
+      $(`r${rm}_loadbar`).style.width = pct + '%';
+
+      const totalBill = r.cost_elec + r.cost_water;
+      const sisa = Math.max(0, totalBill - r.paid);
+      const paidEl = $(`payR${rm}_paid`);
+      if (paidEl) paidEl.textContent = formatRp(r.paid);
+      const outEl = $(`payR${rm}_outstanding`);
+      if (outEl) outEl.textContent = formatRp(sisa);
+    }
+
+    function updateTankUI() {
+      const w = localData.water;
+      const distEl = $('tankDistance');
+      if (!distEl) return;
+
+      distEl.textContent = w.distance_cm.toFixed(1);
+      $('tankPercentText').textContent = w.level_percent;
+      $('tankLiquidFill').style.height = w.level_percent + '%';
+      $('tankTotalCost').textContent = formatRp(w.total_cost);
+      $('tankCostPerRoom').textContent = `Biaya per Ruangan: ${formatRp(w.total_cost / 2)}`;
+      $('pumpStatusBadge').textContent = `Pompa: ${w.pump}`;
+    }
+
+    function refreshDashboard() {
+      updateRoomUI(1);
+      updateRoomUI(2);
+      updateTankUI();
+    }
+
+    function resetTelemetry() {
+      [1, 2].forEach(rm => {
+        localData.rooms[String(rm)].energy_kwh = 0;
+        localData.rooms[String(rm)].cost_elec = 0;
+        localData.rooms[String(rm)].cost_water = 0;
+        localData.rooms[String(rm)].paid = 0;
+      });
+      refreshDashboard();
+      alert('Semua akumulasi energi dan tagihan berhasil direset.');
+    }
+
+    function pushHistoryRow() {
+      const now = new Date();
+      const timeStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ', ' +
+                      now.toTimeString().split(' ')[0];
+
+      const r1 = localData.rooms['1'];
+      const r2 = localData.rooms['2'];
+      const w = localData.water;
+
+      const log = {
+        time: timeStr,
+        r1: `${r1.power.toFixed(1)} W · ${r1.energy_kwh.toFixed(3)} kWh`,
+        r2: `${r2.power.toFixed(1)} W · ${r2.energy_kwh.toFixed(3)} kWh`,
+        air: `${w.distance_cm.toFixed(1)} cm / ${w.pump}`
+      };
+
+      localData.historyLogs.unshift(log);
+      if (localData.historyLogs.length > 15) localData.historyLogs.pop();
+
+      renderHistoryTable();
+    }
+
+    function renderHistoryTable() {
+      const tbody = $('telemetryHistoryTbody');
+      if (!tbody || !localData.historyLogs.length) return;
+
+      tbody.innerHTML = localData.historyLogs.map(item => `
+        <tr>
+          <td style="font-weight:600;">${item.time}</td>
+          <td class="meter-font">${item.r1}</td>
+          <td class="meter-font">${item.r2}</td>
+          <td><span style="color:var(--cyan); font-weight:600;">${item.air}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    function processPayment(room) {
+      const input = $(`payInputR${room}`);
+      const val = parseFloat(input.value);
+      if (!val || val <= 0) {
+        alert('Masukkan nominal pembayaran yang valid.');
+        return;
+      }
+
+      localData.rooms[String(room)].paid += val;
+      input.value = '';
+
+      const now = new Date();
+      const timeStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + now.toTimeString().split(' ')[0];
+
+      const r = localData.rooms[String(room)];
+      const sisa = Math.max(0, (r.cost_elec + r.cost_water) - r.paid);
+
+      const txn = {
+        time: timeStr,
+        room: `Ruang ${room}`,
+        amount: formatRp(val),
+        sisa: formatRp(sisa),
+        ket: 'Pembayaran Dikonfirmasi'
+      };
+
+      localData.transactions.unshift(txn);
+      const txCount = $('statTransactionsCount');
+      if (txCount) txCount.textContent = localData.transactions.length;
+
+      renderPaymentTable();
+      refreshDashboard();
+      alert(`Pembayaran ${formatRp(val)} untuk Ruang ${room} berhasil disimpan.`);
+    }
+
+    function handleResetPelunasan(room, checkbox) {
+      if (checkbox.checked) {
+        const r = localData.rooms[String(room)];
+        r.paid = r.cost_elec + r.cost_water;
+        refreshDashboard();
+        setTimeout(() => {
+          checkbox.checked = false;
+        }, 1000);
+      }
+    }
+
+    function renderPaymentTable() {
+      const tbody = $('paymentHistoryTbody');
+      if (!tbody || !localData.transactions.length) return;
+
+      tbody.innerHTML = localData.transactions.map(t => `
+        <tr>
+          <td>${t.time}</td>
+          <td><b>${t.room}</b></td>
+          <td style="color: var(--emerald); font-weight:700;">+ ${t.amount}</td>
+          <td style="color: var(--amber); font-weight:700;">${t.sisa}</td>
+          <td><span class="pill-btn" style="padding:0.2rem 0.6rem; font-size:0.7rem;">${t.ket}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    function appendAIChatMessage(sender, text, isAi = false) {
+      const win = $('aiChatWindow');
+      const div = document.createElement('div');
+      div.className = `chat-bubble ${isAi ? 'ai' : 'user'}`;
+      div.innerHTML = `<b>${sender}:</b> ${text.replace(/\n/g, '<br>')}`;
+      win.appendChild(div);
+      win.scrollTop = win.scrollHeight;
+      return div;
+    }
+
+    async function sendAIChat() {
+      const inp = $('aiInputPrompt');
+      const prompt = inp.value.trim();
+      if (!prompt) return;
+
+      appendAIChatMessage('Anda', prompt, false);
+      inp.value = '';
+
+      const loadingMsg = appendAIChatMessage('🤖 EQUILINK AI', 'Menganalisis data konsumsi kamar...', true);
+
+      try {
+        const res = await fetch('/api/ai', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: prompt })
+        }).catch(() => null);
+
+        if (res && res.ok) {
+          const json = await res.json();
+          loadingMsg.innerHTML = `<b>🤖 EQUILINK AI:</b> ${json.answer.replace(/\n/g, '<br>')}`;
+        } else {
+          setTimeout(() => {
+            let reply = "Berdasarkan sensor EQUILINK terkini, pasokan tegangan listrik PLN normal di 220V. ";
+            if (prompt.toLowerCase().includes('ruang 1') || prompt.toLowerCase().includes('kamar 1')) {
+              reply += `Beban aktif Ruang 1 saat ini adalah ${localData.rooms['1'].power.toFixed(1)}W dengan akumulasi ${localData.rooms['1'].energy_kwh.toFixed(3)} kWh. Disarankan menonaktifkan saklar Power saat meninggalkan kamar guna menghindari konsumsi phantom load.`;
+            } else if (prompt.toLowerCase().includes('air')) {
+              reply += `Ketinggian air tangki saat ini ${localData.water.level_percent}%. Biaya dibagi secara proporsional dan adil antar kedua ruangan.`;
+            } else {
+              reply += "Tips efisiensi: pastikan lampu dimatikan saat siang hari dan gunakan saklar toggle Power untuk mematikan perangkat elektronik yang tidak digunakan secara total.";
+            }
+            loadingMsg.innerHTML = `<b>🤖 EQUILINK AI:</b> ${reply}`;
+          }, 700);
+        }
+      } catch (err) {
+        loadingMsg.innerHTML = `<b>🤖 EQUILINK AI:</b> Terjadi kendala koneksi ke server AI.`;
+      }
+    }
+
+    function triggerAutoAIAnalysis() {
+      $('aiInputPrompt').value = 'Berikan ringkasan analisis efisiensi energi dan air kedua kamar saat ini.';
+      sendAIChat();
+    }
+
+    function checkQuizAnswer(selectedIdx) {
+      const res = $('quizResultMsg');
+      if (selectedIdx === 1) {
+        res.innerHTML = '<span style="color: var(--emerald);">✓ Benar! Prinsip Proportional Equity membagi beban sesuai konsumsi riil (60:40) sehingga tidak merugikan pihak lain.</span>';
+      } else {
+        res.innerHTML = '<span style="color: var(--rose);">✗ Kurang tepat. Membagi rata sama banyak akan membebankan pemborosan satu pihak kepada penghuni yang hemat.</span>';
+      }
+    }
+
+    function handleNewPeriod() {
+      if (confirm('Tutup periode penagihan aktif saat ini dan mulai siklus baru?')) {
+        [1, 2].forEach(rm => {
+          localData.rooms[String(rm)].energy_kwh = 0;
+          localData.rooms[String(rm)].cost_elec = 0;
+          localData.rooms[String(rm)].cost_water = 0;
+          localData.rooms[String(rm)].paid = 0;
+        });
+        refreshDashboard();
+        alert('Periode baru berhasil dimulai.');
+      }
+    }
+
+    pushHistoryRow();
+  </script>
 </body>
 </html>
