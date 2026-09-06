@@ -1,259 +1,223 @@
-let me = null, state = null;
-const $ = id => document.getElementById(id);
-const money = n => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n || 0);
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EQUILINK</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
 
-function escapeHtml(str) {
-    const d = document.createElement('div');
-    d.textContent = str;
-    return d.innerHTML;
-}
+<!-- LOGIN -->
+<div id="login" class="login">
+    <div class="login-card">
+        <div class="brand-mark"><i class="fa-solid fa-scale-balanced"></i></div>
+        <div class="logo">EQUILINK</div>
+        <p>Sistem Edukasi Keadilan Penggunaan Energi &amp; Air berbasis IoT + AI</p>
+        <input id="username" placeholder="Username">
+        <input id="password" type="password" placeholder="Password">
+        <button class="btn-primary" style="width:100%; padding:.7rem;" onclick="login()">Masuk</button>
+        <div id="loginErr"></div>
+        <small>Demo: admin/admin123 · user1/user123 · user2/user123</small>
+    </div>
+</div>
 
-async function api(url, opt = {}) {
-    const r = await fetch(url, { headers: { 'Content-Type': 'application/json', ...(opt.headers || {}) }, ...opt });
-    const d = await r.json().catch(() => ({}));
-    if (!r.ok) throw new Error(d.error || 'Request gagal');
-    return d;
-}
+<!-- APP -->
+<div id="app" class="hidden app-shell">
 
-// ============ AUTH ============
-async function login() {
-    try {
-        const d = await api('/api/login', { method: 'POST', body: JSON.stringify({ username: $('username').value, password: $('password').value }) });
-        me = d.user;
-        $('login').classList.add('hidden');
-        $('app').classList.remove('hidden');
-        $('who').innerHTML = `<i class="fa-solid fa-user" style="margin-right:.3rem;"></i>${escapeHtml(me.username)} · ${escapeHtml(me.role)}${me.room ? ' · Room ' + me.room : ''}`;
-        if (me.role !== 'admin') $('settingsNav').classList.add('hidden');
-        applyAccess();
-        await refreshAll();
-        setInterval(refreshAll, 5000);
-    } catch (e) {
-        $('loginErr').textContent = e.message;
-    }
-}
+    <div id="sidebarOverlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
 
-async function logout() {
-    await api('/api/logout', { method: 'POST' });
-    location.reload();
-}
+    <aside id="sidebar">
+        <div class="brand"><span class="dot-mark"><i class="fa-solid fa-scale-balanced"></i></span> EQUILINK</div>
+        <div id="who">-</div>
+        <nav>
+            <button data-page="dashboard" class="active" onclick="nav('dashboard')"><i class="fa-solid fa-grid-2" style="width:16px;"></i> Dashboard</button>
+            <button data-page="payment" onclick="nav('payment')"><i class="fa-solid fa-credit-card" style="width:16px;"></i> Payment</button>
+            <button data-page="education" onclick="nav('education')"><i class="fa-solid fa-graduation-cap" style="width:16px;"></i> Education</button>
+            <button data-page="settings" id="settingsNav" onclick="nav('settings')"><i class="fa-solid fa-sliders" style="width:16px;"></i> Settings</button>
+        </nav>
+        <button class="logout" onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+    </aside>
 
-// Ruangan yang tidak diizinkan untuk role user dihapus dari DOM (kartu dashboard & form payment)
-// — server (app.py) tetap jadi lapisan pertahanan utama lewat room_allowed().
-function applyAccess() {
-    if (me.role === 'admin') return;
-    const otherRoom = me.room === 1 ? 2 : 1;
-    document.querySelectorAll(`[data-room="${otherRoom}"]`).forEach(el => el.remove());
-}
-
-// ============ NAVIGASI ============
-function nav(page) {
-    document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
-    $(page)?.classList.add('active');
-    document.querySelectorAll('aside nav button').forEach(x => x.classList.remove('active'));
-    document.querySelector(`[data-page="${page}"]`)?.classList.add('active');
-    const titles = { dashboard: 'Dashboard', payment: 'Payment', education: 'Education', settings: 'Settings' };
-    $('title').textContent = titles[page] || page;
-    closeSidebar(); // di mobile, pilih menu langsung menutup sidebar
-}
-
-// ============ SIDEBAR MOBILE (hamburger) ============
-function toggleSidebar() {
-    const isOpen = $('sidebar').classList.contains('open');
-    if (isOpen) closeSidebar(); else openSidebar();
-}
-function openSidebar() {
-    $('sidebar').classList.add('open');
-    document.body.classList.add('sidebar-open');
-}
-function closeSidebar() {
-    $('sidebar').classList.remove('open');
-    document.body.classList.remove('sidebar-open');
-}
-
-// ============ DASHBOARD (Room Monitoring + Water + Equity + History + AI, semua di satu halaman) ============
-async function refreshAll() {
-    try {
-        state = await api('/api/state');
-        $('status').textContent = '● Online';
-        $('status').style.background = 'var(--emerald-soft)';
-        $('status').style.color = 'var(--emerald)';
-        $('period').textContent = state.period?.name || '-';
-        const periodNameEl = $('periodName');
-        if (periodNameEl) periodNameEl.textContent = state.period?.name || '-';
-
-        $('r1kwh').textContent = (state.rooms['1']?.sensor.energy_kwh ?? 0).toFixed(2);
-        $('r2kwh').textContent = (state.rooms['2']?.sensor.energy_kwh ?? 0).toFixed(2);
-
-        const pct = Math.min(100, Math.max(0, state.water?.level_percent || 0));
-        $('water').textContent = pct.toFixed(0);
-        const tank = $('waterTank'); if (tank) tank.style.height = pct.toFixed(0) + '%';
-        const waterPctEl = $('waterPct'); if (waterPctEl) waterPctEl.textContent = pct.toFixed(0);
-
-        renderRoom(1);
-        renderRoom(2);
-        await history();
-        await payments();
-        await equity();
-        await education();
-    } catch (e) {
-        $('status').textContent = '● Offline';
-        $('status').style.background = 'var(--red-soft)';
-        $('status').style.color = 'var(--red)';
-    }
-}
-
-function renderRoom(r) {
-    const d = state.rooms[String(r)];
-    if (!d) return; // ruangan ini tidak diizinkan untuk user saat ini (elemen sudah dihapus applyAccess)
-
-    $(`r${r}volt`).textContent = d.sensor.voltage.toFixed(1);
-    $(`r${r}amp`).textContent = d.sensor.current.toFixed(2);
-    $(`r${r}watt`).textContent = d.sensor.power.toFixed(1);
-    $(`r${r}cost`).textContent = money(d.bill.total_cost);
-
-    const statusEl = $(`r${r}status`);
-    if (statusEl && d.bill.status) {
-        statusEl.textContent = d.bill.status;
-        statusEl.className = 'pill ' + (d.bill.status === 'LUNAS' ? 'pill-lunas' : 'pill-belum');
-    }
-}
-
-// ============ HISTORY (bagian dari Dashboard) ============
-async function history() {
-    const d = await api('/api/history');
-    $('historyBody').innerHTML = d.rows.length ? d.rows.map(x => `
-        <tr>
-            <td>Room ${x.room}</td>
-            <td>${new Date(x.timestamp).toLocaleString('id-ID')}</td>
-            <td class="meter-font">${x.voltage.toFixed(1)}</td>
-            <td class="meter-font">${x.current.toFixed(2)}</td>
-            <td class="meter-font">${x.power.toFixed(1)}</td>
-            <td class="meter-font">${x.energy_kwh.toFixed(3)}</td>
-        </tr>`).join('')
-        : `<tr><td colspan="6" style="text-align:center; color:var(--muted); font-style:italic;">Belum ada data sensor.</td></tr>`;
-}
-
-// ============ PAYMENT ============
-async function payments() {
-    const d = await api('/api/payments');
-    $('paymentBody').innerHTML = d.rows.length ? d.rows.map(x => `
-        <tr>
-            <td>Room ${x.room}</td>
-            <td style="color:var(--emerald); font-weight:700;">${money(x.amount)}</td>
-            <td>${new Date(x.timestamp).toLocaleString('id-ID')}</td>
-            <td style="color:var(--muted);">${escapeHtml(x.note)}</td>
-        </tr>`).join('')
-        : `<tr><td colspan="4" style="text-align:center; color:var(--muted); font-style:italic;">Belum ada riwayat pembayaran.</td></tr>`;
-}
-
-async function pay(room) {
-    try {
-        const amount = Number($(`amount${room}`).value);
-        await api('/api/payment', { method: 'POST', body: JSON.stringify({ room, amount }) });
-        $(`amount${room}`).value = '';
-        await refreshAll();
-        alert('Pembayaran tersimpan');
-    } catch (e) {
-        alert(e.message);
-    }
-}
-
-// ============ RELAY ============
-async function relay(room, device, on) {
-    try {
-        await api('/api/relay', { method: 'POST', body: JSON.stringify({ room, device, state: on }) });
-    } catch (e) {
-        alert(e.message);
-    }
-}
-
-// ============ EQUITY (bagian dari Dashboard) ============
-async function equity() {
-    const d = await api('/api/equity');
-    $('equityBox').innerHTML = `
-        <div class="mini-row" style="margin-bottom:1rem;">
-            <div class="mini-stat"><p class="mlabel">TOTAL ENERGI</p><p class="mvalue">${d.total_energy.toFixed(2)} kWh</p></div>
-            <div class="mini-stat"><p class="mlabel">TOTAL BIAYA</p><p class="mvalue">${money(d.total_cost)}</p></div>
-        </div>
-        ${d.rows.map(x => `
-            <div class="equity-row">
-                <div><b style="color:var(--navy-900);">Room ${x.room}</b><br>
-                    <span style="color:var(--muted); font-size:.8rem;">${x.energy_kwh.toFixed(2)} kWh · ${x.share.toFixed(1)}% dari total</span>
+    <main>
+        <header>
+            <div style="display:flex; align-items:flex-start; gap:.7rem;">
+                <button id="hamburgerBtn" class="hamburger" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+                <div>
+                    <h1 id="title">Dashboard</h1>
+                    <p id="subtitle">Monitoring realtime konsumsi listrik &amp; air</p>
                 </div>
-                <div style="text-align:right;">
-                    <div style="font-weight:700;">${money(x.cost)}</div>
-                    <div class="${x.fairness ? 'good' : 'bad'}" style="font-size:.72rem;">${x.fairness ? '✓ Fair Distribution' : '⚠ Check Distribution'}</div>
+            </div>
+            <div style="text-align:right;">
+                <span id="status">● Offline</span>
+                <p id="period">-</p>
+            </div>
+        </header>
+
+        <!-- ===== DASHBOARD (semua digabung di sini) ===== -->
+        <section id="dashboard" class="page active">
+
+            <div class="grid cards">
+                <div class="card"><div class="stat-icon"><i class="fa-solid fa-bolt"></i></div><div class="stat-body"><span>Room 1 Energy</span><b id="r1kwh">0</b><small>kWh</small></div></div>
+                <div class="card"><div class="stat-icon"><i class="fa-solid fa-bolt"></i></div><div class="stat-body"><span>Room 2 Energy</span><b id="r2kwh">0</b><small>kWh</small></div></div>
+                <div class="card"><div class="stat-icon"><i class="fa-solid fa-droplet"></i></div><div class="stat-body"><span>Water Level</span><b id="water">0</b><small>%</small></div></div>
+                <div class="card"><div class="stat-icon"><i class="fa-solid fa-calendar-days"></i></div><div class="stat-body"><span>Active Period</span><b id="periodName" style="font-size:.95rem;">-</b></div></div>
+            </div>
+
+            <h2 class="section-title">Room Monitoring</h2>
+            <div class="grid two">
+                <div class="panel room-card" data-room="1">
+                    <div class="head">
+                        <div><h3>Room 1</h3><p style="color:var(--muted); font-size:.75rem; margin-top:.2rem;">Utility Monitor</p></div>
+                        <span id="r1status" class="pill pill-belum">BELUM BAYAR</span>
+                    </div>
+                    <div class="readout-row">
+                        <div class="readout-tile"><p class="rlabel">VOLTAGE</p><p class="rvalue meter-font"><span id="r1volt">0.0</span><span class="runit">V</span></p></div>
+                        <div class="readout-tile"><p class="rlabel">CURRENT</p><p class="rvalue meter-font"><span id="r1amp">0.00</span><span class="runit">A</span></p></div>
+                    </div>
+                    <div class="mini-row">
+                        <div class="mini-stat"><p class="mlabel">DAYA</p><p class="mvalue"><span id="r1watt">0.0</span> W</p></div>
+                        <div class="mini-stat"><p class="mlabel">TAGIHAN</p><p class="mvalue" id="r1cost">Rp 0</p></div>
+                    </div>
+                    <div class="relay-row">
+                        <span class="relay-label"><i class="fa-solid fa-lightbulb" style="color:var(--amber);"></i> Lampu</span>
+                        <div class="relay-btns">
+                            <button class="btn-primary" onclick="relay(1,'lamp',true)">ON</button>
+                            <button class="btn-off" onclick="relay(1,'lamp',false)">OFF</button>
+                        </div>
+                    </div>
+                    <div class="relay-row">
+                        <span class="relay-label"><i class="fa-solid fa-plug" style="color:var(--navy-900);"></i> Outlet</span>
+                        <div class="relay-btns">
+                            <button class="btn-primary" onclick="relay(1,'outlet',true)">ON</button>
+                            <button class="btn-off" onclick="relay(1,'outlet',false)">OFF</button>
+                        </div>
+                    </div>
                 </div>
-            </div>`).join('')}
-    `;
-}
 
-// ============ SETTINGS ============
-async function newPeriod() {
-    try {
-        await api('/api/period/new', { method: 'POST' });
-        await refreshAll();
-        alert('Periode baru dibuat');
-    } catch (e) {
-        alert(e.message);
-    }
-}
+                <div class="panel room-card" data-room="2">
+                    <div class="head">
+                        <div><h3>Room 2</h3><p style="color:var(--muted); font-size:.75rem; margin-top:.2rem;">Utility Monitor</p></div>
+                        <span id="r2status" class="pill pill-belum">BELUM BAYAR</span>
+                    </div>
+                    <div class="readout-row">
+                        <div class="readout-tile"><p class="rlabel">VOLTAGE</p><p class="rvalue meter-font"><span id="r2volt">0.0</span><span class="runit">V</span></p></div>
+                        <div class="readout-tile"><p class="rlabel">CURRENT</p><p class="rvalue meter-font"><span id="r2amp">0.00</span><span class="runit">A</span></p></div>
+                    </div>
+                    <div class="mini-row">
+                        <div class="mini-stat"><p class="mlabel">DAYA</p><p class="mvalue"><span id="r2watt">0.0</span> W</p></div>
+                        <div class="mini-stat"><p class="mlabel">TAGIHAN</p><p class="mvalue" id="r2cost">Rp 0</p></div>
+                    </div>
+                    <div class="relay-row">
+                        <span class="relay-label"><i class="fa-solid fa-lightbulb" style="color:var(--amber);"></i> Lampu</span>
+                        <div class="relay-btns">
+                            <button class="btn-primary" onclick="relay(2,'lamp',true)">ON</button>
+                            <button class="btn-off" onclick="relay(2,'lamp',false)">OFF</button>
+                        </div>
+                    </div>
+                    <div class="relay-row">
+                        <span class="relay-label"><i class="fa-solid fa-plug" style="color:var(--navy-900);"></i> Outlet</span>
+                        <div class="relay-btns">
+                            <button class="btn-primary" onclick="relay(2,'outlet',true)">ON</button>
+                            <button class="btn-off" onclick="relay(2,'outlet',false)">OFF</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-// ============ EDUCATION ============
-async function education() {
-    const d = await api('/api/education');
-    $('lessons').innerHTML = d.lessons.map(x => `<div class="lesson"><b>${escapeHtml(x.title)}</b><p>${escapeHtml(x.body)}</p></div>`).join('');
-    const q = d.quiz[0];
-    $('quiz').innerHTML = `
-        <p style="font-weight:700; font-size:.85rem;">${escapeHtml(q.q)}</p>
-        <div class="quizopt">${q.options.map((o, i) => `<button onclick="answer(${i},${q.answer})">${String.fromCharCode(65 + i)}. ${escapeHtml(o)}</button>`).join('')}</div>
-        <div id="quizResult" style="margin-top:.6rem;"></div>`;
-}
+            <div class="panel">
+                <h3><i class="fa-solid fa-faucet-drip" style="color:var(--cyan); margin-right:.4rem;"></i>Tangki Air</h3>
+                <div class="grid two" style="align-items:center;">
+                    <div class="tank"><div id="waterTank" class="tank-liquid" style="height:0%;"></div></div>
+                    <div>
+                        <p style="color:var(--muted); font-size:.8rem; margin:0 0 .3rem;">Kapasitas tangki saat ini</p>
+                        <p class="meter-font" style="font-size:1.6rem; font-weight:700; color:var(--cyan);"><span id="waterPct">0</span>%</p>
+                    </div>
+                </div>
+            </div>
 
-function answer(i, a) {
-    $('quizResult').innerHTML = i === a
-        ? '<p class="good">✓ Benar. Itulah proportional equity.</p>'
-        : '<p class="bad">Belum tepat. Coba pahami perbandingan konsumsi aktual.</p>';
-}
+            <div class="panel">
+                <h3>Proportional Equity — Pembagian Biaya Berbasis Pemakaian Aktual</h3>
+                <div id="equityBox">Memuat data equity…</div>
+            </div>
 
-// ============ AI CONSULTANT & CHATBOT (bagian dari Dashboard) ============
-function appendChat(role, html) {
-    const box = $('chat');
-    const div = document.createElement('div');
-    div.className = 'msg ' + role;
-    div.innerHTML = html;
-    box.appendChild(div);
-    box.scrollTop = box.scrollHeight;
-    return div;
-}
+            <div class="panel">
+                <h3>Histori Sensor (200 terakhir)</h3>
+                <div style="overflow-x:auto; max-height:280px; overflow-y:auto;">
+                    <table>
+                        <thead><tr><th>Room</th><th>Waktu</th><th>V</th><th>A</th><th>W</th><th>kWh</th></tr></thead>
+                        <tbody id="historyBody"><tr><td colspan="6" style="text-align:center; color:var(--muted); font-style:italic;">Memuat...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
 
-async function askAI() {
-    const q = $('question').value.trim();
-    if (!q) return;
-    appendChat('user', `<b>Anda:</b> ${escapeHtml(q)}`);
-    $('question').value = '';
-    try {
-        const d = await api('/api/ai', { method: 'POST', body: JSON.stringify({ query: q }) });
-        appendChat('ai', `<b>EQUILINK AI:</b> ${escapeHtml(d.answer).replace(/\n/g, '<br>')}`);
-    } catch (e) {
-        appendChat('bad', escapeHtml(e.message));
-    }
-}
+            <!-- AI CONSULTANT & CHATBOT -->
+            <div class="panel">
+                <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.8rem; margin-bottom:.9rem; padding-bottom:.9rem; border-bottom:1px solid var(--border);">
+                    <div style="display:flex; align-items:center; gap:.7rem;">
+                        <div class="stat-icon" style="background:var(--violet-soft); color:var(--violet);"><i class="fa-solid fa-brain"></i></div>
+                        <div>
+                            <h3 style="border:0; padding:0; margin:0; font-size:.95rem;">AI Energy Consultant &amp; Chatbot</h3>
+                            <p style="color:var(--muted); font-size:.78rem; margin-top:.15rem;">Analisis otomatis &amp; asisten interaktif — didukung Google Gemini</p>
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="btnAnalyze" onclick="analyzeAuto()"><i class="fa-solid fa-wand-magic-sparkles"></i> Analisis Otomatis</button>
+                </div>
+                <div id="chat" class="chatbox">
+                    <div class="msg ai"><b>EQUILINK AI:</b> Halo! Klik "Analisis Otomatis" untuk ringkasan cepat, atau tanyakan apa saja seputar tagihan, efisiensi, dan keadilan pembagian biaya Anda.</div>
+                </div>
+                <div class="chatrow">
+                    <input id="question" placeholder="Contoh: mengapa tagihan saya naik?" onkeypress="if(event.key==='Enter')askAI()">
+                    <button class="btn-primary" onclick="askAI()"><i class="fa-solid fa-paper-plane"></i> Kirim</button>
+                </div>
+            </div>
+        </section>
 
-// Tombol "Analisis Otomatis" — mengirim pertanyaan baku ke AI supaya user tidak perlu mengetik apa pun.
-async function analyzeAuto() {
-    const btn = $('btnAnalyze');
-    btn.disabled = true;
-    const loading = appendChat('ai', '<b>EQUILINK AI:</b> ⏳ Menganalisis efisiensi energi & air Anda...');
-    try {
-        const d = await api('/api/ai', {
-            method: 'POST',
-            body: JSON.stringify({ query: 'Berikan analisis singkat (2 paragraf) mengenai efisiensi penggunaan listrik dan air saya saat ini, beserta rekomendasi hemat energi dan estimasi tagihan bulanan.' })
-        });
-        loading.innerHTML = `<b>Analisis Otomatis AI:</b> ${escapeHtml(d.answer).replace(/\n/g, '<br>')}`;
-    } catch (e) {
-        loading.className = 'msg bad';
-        loading.innerHTML = escapeHtml(e.message);
-    }
-    btn.disabled = false;
-}
+        <!-- ===== PAYMENT ===== -->
+        <section id="payment" class="page">
+            <div class="grid two">
+                <div class="panel" id="pay1" data-room="1">
+                    <h3>Payment Room 1</h3>
+                    <input id="amount1" type="number" placeholder="Nominal pembayaran (Rp)">
+                    <button class="btn-primary" style="width:100%; margin-top:.6rem;" onclick="pay(1)">Catat Pembayaran</button>
+                </div>
+                <div class="panel" id="pay2" data-room="2">
+                    <h3>Payment Room 2</h3>
+                    <input id="amount2" type="number" placeholder="Nominal pembayaran (Rp)">
+                    <button class="btn-primary" style="width:100%; margin-top:.6rem;" onclick="pay(2)">Catat Pembayaran</button>
+                </div>
+            </div>
+            <div class="panel">
+                <h3>Riwayat Pembayaran</h3>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead><tr><th>Room</th><th>Nominal</th><th>Waktu</th><th>Catatan</th></tr></thead>
+                        <tbody id="paymentBody"><tr><td colspan="4" style="text-align:center; color:var(--muted); font-style:italic;">Belum ada riwayat.</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== EDUCATION ===== -->
+        <section id="education" class="page">
+            <div class="grid two">
+                <div class="panel"><h3>Materi Edukasi</h3><div id="lessons">Memuat…</div></div>
+                <div class="panel"><h3>ECO Quiz</h3><div id="quiz">Memuat…</div></div>
+            </div>
+        </section>
+
+        <!-- ===== SETTINGS (admin) ===== -->
+        <section id="settings" class="page">
+            <div class="panel">
+                <h3>Billing Period</h3>
+                <p style="color:var(--muted); font-size:.82rem; margin:0 0 .8rem;">Menutup periode aktif tidak menghapus histori lama — hanya memulai perhitungan tagihan baru.</p>
+                <button class="btn-primary" onclick="newPeriod()"><i class="fa-solid fa-rotate"></i> Close Period &amp; Start New Period</button>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
