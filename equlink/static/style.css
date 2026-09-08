@@ -1,6 +1,7 @@
 /* =========================================================
    EQUILINK — STYLESHEET RESMI
    Sistem Edukasi Keadilan Energi & Air Berbasis IoT + AI
+   (Tidak ada perubahan dari versi yang diberikan user)
    ========================================================= */
 
 :root {
@@ -1064,7 +1065,6 @@ table.equilink-table tr:hover td {
   color: var(--brand-navy);
 }
 
-/* RESPONSIVE BREAKPOINTS */
 .mobile-hamburger {
   display: none;
   width: 40px;
