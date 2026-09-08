@@ -1,65 +1,51 @@
 /**
  * EQUILINK — APLIKASI UTAMA (app.js)
  * Sistem Edukasi Keadilan Penggunaan Energi & Air Berbasis IoT + AI
+ *
+ * CATATAN PERBAIKAN (dibanding versi sebelumnya):
+ * 1) Toggle "Power" sekarang mengirim device 'outlet' (bukan 'power') ke /api/relay,
+ *    sesuai validasi di app.py — sebelumnya selalu gagal 400.
+ * 2) SEMUA angka (voltase, arus, daya, kWh, tagihan, level air, riwayat) sekarang
+ *    diambil dari /api/state, /api/history, /api/payments milik server — bukan lagi
+ *    di-random di browser (Math.random()). Tampilan & elemen HTML-nya sama persis,
+ *    hanya sumber datanya yang sekarang nyata.
+ * 3) Login tidak lagi diam-diam "berpura-pura sukses" kalau server tidak terjangkau —
+ *    kalau gagal, pesan errornya ditampilkan apa adanya. Field password tidak lagi
+ *    otomatis terisi kredensial admin.
+ * 4) "Reset All" & "Close Period" sekarang benar-benar memanggil /api/period/new,
+ *    bukan cuma mereset variabel di browser.
+ * 5) "Slide Reset Pelunasan Total" sekarang memanggil /api/payment dengan nominal
+ *    = sisa tagihan saat ini, jadi benar-benar melunasi di server (fitur/tampilan
+ *    tetap sama seperti sebelumnya).
+ * 6) Info "Koneksi MQTT" di Room Settings diluruskan supaya sesuai konfigurasi asli
+ *    di app.py (topik & port), bukan lagi asal disalin dari proyek lain.
  */
 
 let currentUser = null;
-let telemetryTimer = null;
-
-// State data internal (terhubung otomatis ke backend atau fallback simulasi cerdas)
-let localData = {
-  period: 'September 2026',
-  transactions: [],
-  historyLogs: [],
-  rooms: {
-    '1': {
-      voltage: 220.4,
-      current: 0.00,
-      power: 0.0,
-      energy_kwh: 0.000,
-      lamp: false,
-      powerSw: false,
-      paid: 0,
-      cost_elec: 0,
-      cost_water: 0
-    },
-    '2': {
-      voltage: 220.8,
-      current: 0.00,
-      power: 0.0,
-      energy_kwh: 0.000,
-      lamp: false,
-      powerSw: false,
-      paid: 0,
-      cost_elec: 0,
-      cost_water: 0
-    }
-  },
-  water: {
-    distance_cm: 18.5,
-    height_cm: 23,
-    level_percent: 45,
-    pump: 'IDLE',
-    total_cost: 0
-  }
-};
+let pollTimer = null;
+let logTimer = null;
+let lastState = null; // cache state terakhir, dipakai auto-log riwayat pemakaian
 
 const $ = id => document.getElementById(id);
 const formatRp = num => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num || 0);
 
 function formatDateNow() {
   const d = new Date();
-  const options = { weekday: 'long', year: 'numeric', month: 'short', day: '2-digit' };
-  return d.toLocaleDateString('id-ID', options);
+  return d.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'short', day: '2-digit' });
 }
-
-// Inisialisasi Tanggal Header
 const dateEl = $('currentDateStr');
 if (dateEl) dateEl.textContent = formatDateNow();
 
 function fillLogin(u, p) {
   $('loginUser').value = u;
   $('loginPass').value = p;
+}
+
+async function api(url, opt = {}) {
+  const r = await fetch(url, { headers: { 'Content-Type': 'application/json', ...(opt.headers || {}) }, ...opt });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.error || 'Request gagal');
+  return d;
 }
 
 // ================= AUTENTIKASI =================
@@ -69,56 +55,40 @@ async function handleLogin() {
   $('loginErrMsg').textContent = '';
 
   try {
-    const res = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: u, password: p })
-    }).catch(() => null);
+    const json = await api('/api/login', { method: 'POST', body: JSON.stringify({ username: u, password: p }) });
+    currentUser = json.user;
 
-    if (res && res.ok) {
-      const json = await res.json();
-      currentUser = json.user;
-    } else {
-      // Fallback Kredensial Mandiri
-      if (u === 'admin' && p === 'admin123') {
-        currentUser = { username: 'ADMIN', role: 'admin' };
-      } else if (u === 'user1' && p === 'user123') {
-        currentUser = { username: 'USER1', role: 'user', room: 1 };
-      } else if (u === 'user2' && p === 'user123') {
-        currentUser = { username: 'USER2', role: 'user', room: 2 };
-      } else {
-        throw new Error('Username atau password tidak cocok.');
-      }
-    }
-
-    // Buka tampilan utama
     $('loginSection').classList.add('hidden');
     $('appSection').classList.remove('hidden');
 
     $('loggedUserName').textContent = currentUser.username;
     $('loggedUserRole').textContent = currentUser.role === 'admin' ? 'ADMINISTRATOR' : `ROOM ${currentUser.room}`;
 
-    // Batasi akses user biasa
     if (currentUser.role !== 'admin') {
       const setBtn = $('settingsNavBtn');
       if (setBtn) setBtn.classList.add('hidden');
       const otherRoom = currentUser.room === 1 ? 2 : 1;
       document.querySelectorAll(`[data-room="${otherRoom}"]`).forEach(el => el.style.display = 'none');
       $('statTotalRooms').textContent = '1';
+      $('roomCountPill').innerHTML = '<i class="fa-solid fa-layer-group"></i> 1 Room';
+    } else {
+      $('btnResetAll').classList.remove('hidden');
+      $('periodSettingsCard').classList.remove('hidden');
     }
 
-    refreshDashboard();
-    telemetryTimer = setInterval(updateTelemetrySim, 3000);
+    await refreshAll();
+    pollTimer = setInterval(refreshAll, 5000);
+    logTimer = setInterval(logUsageSnapshot, 60000);
 
   } catch (err) {
-    $('loginErrMsg').textContent = err.message || 'Login gagal';
+    $('loginErrMsg').textContent = err.message || 'Login gagal. Pastikan server backend (app.py) sedang berjalan.';
   }
 }
 
 function handleLogout() {
-  if (telemetryTimer) clearInterval(telemetryTimer);
-  fetch('/api/logout', { method: 'POST' }).catch(() => {});
-  location.reload();
+  if (pollTimer) clearInterval(pollTimer);
+  if (logTimer) clearInterval(logTimer);
+  api('/api/logout', { method: 'POST' }).catch(() => {}).finally(() => location.reload());
 }
 
 // ================= NAVIGASI MENU =================
@@ -149,224 +119,217 @@ function toggleSidebar() {
   $('mainSidebar').classList.toggle('open');
   document.body.classList.toggle('sidebar-open');
 }
-
 function closeSidebar() {
   $('mainSidebar').classList.remove('open');
   document.body.classList.remove('sidebar-open');
 }
 
 // ================= SAKLAR SLIDE BOLA (RELAY) =================
+// device HARUS 'lamp' atau 'outlet' — sesuai validasi di app.py.
 async function toggleRelay(room, device, state) {
-  localData.rooms[String(room)][device === 'lamp' ? 'lamp' : 'powerSw'] = state;
-
-  await fetch('/api/relay', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ room, device, state })
-  }).catch(() => {});
-
-  calculateInstantLoad(room);
+  try {
+    await api('/api/relay', { method: 'POST', body: JSON.stringify({ room, device, state }) });
+  } catch (e) {
+    alert('Gagal mengirim perintah relay: ' + e.message);
+    // kembalikan toggle ke posisi semula kalau request ditolak server
+    const el = device === 'lamp' ? $(`r${room}_lamp_sw`) : $(`r${room}_power_sw`);
+    if (el) el.checked = !state;
+    return;
+  }
+  // Nilai daya/arus akan ter-update otomatis dari data sensor asli
+  // pada polling /api/state berikutnya (maks. 5 detik), bukan dikira-kira di sini.
+  setTimeout(refreshAll, 1200);
 }
 
-function calculateInstantLoad(room) {
-  const r = localData.rooms[String(room)];
-  let watt = 0;
-  if (r.lamp) watt += 45 + Math.random() * 5;
-  if (r.powerSw) watt += 180 + Math.random() * 20;
+// ================= AMBIL DATA ASLI DARI SERVER =================
+async function refreshAll() {
+  try {
+    const state = await api('/api/state');
+    lastState = state;
 
-  r.power = watt;
-  r.current = watt > 0 ? (watt / r.voltage) : 0;
-  updateRoomUI(room);
-}
+    $('connStatus').innerHTML = '<i class="fa-solid fa-circle" style="font-size:0.55rem;"></i> Terhubung';
+    $('connStatus').style.background = 'var(--emerald-soft)';
+    $('connStatus').style.color = 'var(--emerald)';
 
-// ================= TELEMETRI REALTIME =================
-function updateTelemetrySim() {
-  [1, 2].forEach(rm => {
-    const r = localData.rooms[String(rm)];
-    r.voltage = 220 + (Math.random() * 3 - 1.5);
-    if (r.lamp || r.powerSw) {
-      calculateInstantLoad(rm);
-      r.energy_kwh += (r.power / 1000) * (3 / 3600);
-      r.cost_elec = r.energy_kwh * 1444.70;
-    } else {
-      r.power = 0;
-      r.current = 0;
-    }
-    updateRoomUI(rm);
-  });
+    const statusEl = $('statSystemStatus');
+    statusEl.textContent = 'Healthy';
+    statusEl.style.color = 'var(--emerald)';
 
-  // Fluktuasi level air tangki
-  const w = localData.water;
-  w.distance_cm = Math.max(2, Math.min(23, (w.distance_cm + (Math.random() * 0.4 - 0.2))));
-  w.level_percent = Math.round(((w.height_cm - w.distance_cm) / w.height_cm) * 100);
-  w.total_cost = 12500 + Math.round(w.level_percent * 40);
-  localData.rooms['1'].cost_water = w.total_cost / 2;
-  localData.rooms['2'].cost_water = w.total_cost / 2;
+    [1, 2].forEach(rm => {
+      const d = state.rooms[String(rm)];
+      if (d) updateRoomUI(rm, d);
+    });
 
-  updateTankUI();
+    updateTankUI(state.water || {});
 
-  if (Math.random() > 0.6) {
-    pushHistoryRow();
+    let grid = 'Stable';
+    [1, 2].forEach(rm => {
+      const d = state.rooms[String(rm)];
+      if (d && d.sensor && d.sensor.power > 900) grid = 'Overload';
+    });
+    const gridEl = $('statEnergyGrid');
+    gridEl.textContent = grid;
+    gridEl.style.color = grid === 'Overload' ? 'var(--rose)' : 'var(--brand-navy)';
+
+    await loadPayments();
+  } catch (e) {
+    $('connStatus').innerHTML = '<i class="fa-solid fa-circle" style="font-size:0.55rem;"></i> Terputus';
+    $('connStatus').style.background = 'var(--rose-soft)';
+    $('connStatus').style.color = 'var(--rose)';
+    const statusEl = $('statSystemStatus');
+    statusEl.textContent = 'Terputus';
+    statusEl.style.color = 'var(--rose)';
   }
 }
 
-function updateRoomUI(rm) {
-  const r = localData.rooms[String(rm)];
+function updateRoomUI(rm, d) {
+  const s = d.sensor || {};
+  const b = d.bill || {};
+
   const vEl = $(`r${rm}_volt`);
   if (!vEl) return;
 
-  vEl.textContent = r.voltage.toFixed(1);
-  $(`r${rm}_amp`).textContent = r.current.toFixed(2);
-  $(`r${rm}_watt`).textContent = r.power.toFixed(1);
-  $(`r${rm}_kwh`).textContent = r.energy_kwh.toFixed(3);
+  vEl.textContent = (s.voltage || 0).toFixed(1);
+  $(`r${rm}_amp`).textContent = (s.current || 0).toFixed(2);
+  $(`r${rm}_watt`).textContent = (s.power || 0).toFixed(1);
+  $(`r${rm}_kwh`).textContent = (s.energy_kwh || 0).toFixed(3);
 
-  $(`r${rm}_cost_elec`).textContent = formatRp(r.cost_elec);
-  $(`r${rm}_cost_water`).textContent = formatRp(r.cost_water);
+  $(`r${rm}_cost_elec`).textContent = formatRp(b.energy_cost || 0);
+  $(`r${rm}_cost_water`).textContent = formatRp(b.water_cost || 0);
 
-  const pct = Math.min(100, Math.max(0, (r.power / 900) * 100));
+  const pct = Math.min(100, Math.max(0, ((s.power || 0) / 900) * 100));
   $(`r${rm}_loadbar`).style.width = pct + '%';
 
-  const totalBill = r.cost_elec + r.cost_water;
-  const sisa = Math.max(0, totalBill - r.paid);
+  const paid = b.paid_amount || 0;
+  const sisa = Math.max(0, (b.total_cost || 0) - paid);
   const paidEl = $(`payR${rm}_paid`);
-  if (paidEl) paidEl.textContent = formatRp(r.paid);
+  if (paidEl) paidEl.textContent = formatRp(paid);
   const outEl = $(`payR${rm}_outstanding`);
   if (outEl) outEl.textContent = formatRp(sisa);
+
+  const statusBadge = $(`r${rm}status`);
+  if (statusBadge && b.status) {
+    statusBadge.innerHTML = `<i class="fa-solid fa-circle" style="font-size:0.45rem;"></i> ${b.status === 'LUNAS' ? 'LUNAS' : 'LISTENING'}`;
+  }
 }
 
-function updateTankUI() {
-  const w = localData.water;
+function updateTankUI(w) {
   const distEl = $('tankDistance');
   if (!distEl) return;
 
-  distEl.textContent = w.distance_cm.toFixed(1);
-  $('tankPercentText').textContent = w.level_percent;
-  $('tankLiquidFill').style.height = w.level_percent + '%';
-  $('tankTotalCost').textContent = formatRp(w.total_cost);
-  $('tankCostPerRoom').textContent = `Biaya per Ruangan: ${formatRp(w.total_cost / 2)}`;
-  $('pumpStatusBadge').textContent = `Pompa: ${w.pump}`;
+  const dist = w.distance_cm || 0;
+  const pct = Math.min(100, Math.max(0, w.level_percent || 0));
+
+  distEl.textContent = dist.toFixed(1);
+  $('tankPercentText').textContent = pct.toFixed(0);
+  $('tankLiquidFill').style.height = pct + '%';
+
+  // app.py belum menghitung water_cost (selalu 0 di compute_bills), jadi kartu ini
+  // jujur menampilkan Rp 0 sesuai data asli — bukan dikarang seperti versi sebelumnya.
+  $('tankTotalCost').textContent = formatRp(0);
+  $('tankCostPerRoom').textContent = 'Biaya per Ruangan: ' + formatRp(0);
+
+  // app.py (WaterReading) belum menyimpan status ON/OFF pompa, jadi ditampilkan
+  // apa adanya sebagai "tidak tersedia" alih-alih pura-pura tahu.
+  $('pumpStatusBadge').textContent = 'Pompa: data tidak tersedia';
 }
 
-function refreshDashboard() {
-  updateRoomUI(1);
-  updateRoomUI(2);
-  updateTankUI();
-}
-
-function resetTelemetry() {
-  [1, 2].forEach(rm => {
-    localData.rooms[String(rm)].energy_kwh = 0;
-    localData.rooms[String(rm)].cost_elec = 0;
-    localData.rooms[String(rm)].cost_water = 0;
-    localData.rooms[String(rm)].paid = 0;
-  });
-  refreshDashboard();
-  alert('Semua akumulasi energi dan tagihan berhasil direset.');
-}
-
-function pushHistoryRow() {
-  const now = new Date();
-  const timeStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ', ' +
-                  now.toTimeString().split(' ')[0];
-
-  const r1 = localData.rooms['1'];
-  const r2 = localData.rooms['2'];
-  const w = localData.water;
-
-  const log = {
-    time: timeStr,
-    r1: `${r1.power.toFixed(1)} W · ${r1.energy_kwh.toFixed(3)} kWh`,
-    r2: `${r2.power.toFixed(1)} W · ${r2.energy_kwh.toFixed(3)} kWh`,
-    air: `${w.distance_cm.toFixed(1)} cm / ${w.pump}`
-  };
-
-  localData.historyLogs.unshift(log);
-  if (localData.historyLogs.length > 15) localData.historyLogs.pop();
-
-  renderHistoryTable();
-}
-
-function renderHistoryTable() {
+// ================= RIWAYAT PEMAKAIAN (auto-log tiap 1 menit, data ASLI) =================
+function logUsageSnapshot() {
   const tbody = $('telemetryHistoryTbody');
-  if (!tbody || !localData.historyLogs.length) return;
+  if (!tbody || !lastState) return;
+  if (tbody.children[0] && tbody.children[0].children.length === 1) tbody.innerHTML = '';
 
-  tbody.innerHTML = localData.historyLogs.map(item => `
-    <tr>
-      <td style="font-weight:600;">${item.time}</td>
-      <td class="meter-font">${item.r1}</td>
-      <td class="meter-font">${item.r2}</td>
-      <td><span style="color:var(--cyan); font-weight:600;">${item.air}</span></td>
-    </tr>
-  `).join('');
+  const now = new Date();
+  const timeStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ', ' + now.toTimeString().split(' ')[0];
+
+  const r1 = lastState.rooms['1']?.sensor;
+  const r2 = lastState.rooms['2']?.sensor;
+  const w = lastState.water || {};
+
+  const row = document.createElement('tr');
+  row.innerHTML = `
+    <td style="font-weight:600;">${timeStr}</td>
+    <td class="meter-font">${r1 ? `${r1.power.toFixed(1)} W · ${r1.energy_kwh.toFixed(3)} kWh` : '-'}</td>
+    <td class="meter-font">${r2 ? `${r2.power.toFixed(1)} W · ${r2.energy_kwh.toFixed(3)} kWh` : '-'}</td>
+    <td><span style="color:var(--cyan); font-weight:600;">${(w.distance_cm || 0).toFixed(1)} cm · ${(w.level_percent || 0).toFixed(0)}%</span></td>
+  `;
+  tbody.prepend(row);
+  while (tbody.children.length > 30) tbody.removeChild(tbody.lastChild);
 }
 
 // ================= PROSES PEMBAYARAN =================
-function processPayment(room) {
+async function processPayment(room) {
   const input = $(`payInputR${room}`);
   const val = parseFloat(input.value);
   if (!val || val <= 0) {
     alert('Masukkan nominal pembayaran yang valid.');
     return;
   }
-
-  localData.rooms[String(room)].paid += val;
-  input.value = '';
-
-  const now = new Date();
-  const timeStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + now.toTimeString().split(' ')[0];
-
-  const r = localData.rooms[String(room)];
-  const sisa = Math.max(0, (r.cost_elec + r.cost_water) - r.paid);
-
-  const txn = {
-    time: timeStr,
-    room: `Ruang ${room}`,
-    amount: formatRp(val),
-    sisa: formatRp(sisa),
-    ket: 'Pembayaran Dikonfirmasi'
-  };
-
-  localData.transactions.unshift(txn);
-  const txCount = $('statTransactionsCount');
-  if (txCount) txCount.textContent = localData.transactions.length;
-
-  renderPaymentTable();
-  refreshDashboard();
-  alert(`Pembayaran ${formatRp(val)} untuk Ruang ${room} berhasil disimpan.`);
-}
-
-function handleResetPelunasan(room, checkbox) {
-  if (checkbox.checked) {
-    const r = localData.rooms[String(room)];
-    r.paid = r.cost_elec + r.cost_water;
-    refreshDashboard();
-    setTimeout(() => {
-      checkbox.checked = false;
-    }, 1000);
+  try {
+    await api('/api/payment', { method: 'POST', body: JSON.stringify({ room, amount: val }) });
+    input.value = '';
+    await refreshAll();
+    alert(`Pembayaran ${formatRp(val)} untuk Ruang ${room} berhasil disimpan.`);
+  } catch (e) {
+    alert(e.message);
   }
 }
 
-function renderPaymentTable() {
-  const tbody = $('paymentHistoryTbody');
-  if (!tbody || !localData.transactions.length) return;
+// "Slide Reset Pelunasan Total" — melunasi lewat endpoint /api/payment yang sama
+// (nominal = persis sisa tagihan saat ini), jadi benar-benar tercatat di server.
+async function handleResetPelunasan(room, checkbox) {
+  if (!checkbox.checked) return;
+  const d = lastState && lastState.rooms[String(room)];
+  const bill = d && d.bill;
+  const sisa = bill ? Math.max(0, (bill.total_cost || 0) - (bill.paid_amount || 0)) : 0;
 
-  tbody.innerHTML = localData.transactions.map(t => `
-    <tr>
-      <td>${t.time}</td>
-      <td><b>${t.room}</b></td>
-      <td style="color: var(--emerald); font-weight:700;">+ ${t.amount}</td>
-      <td style="color: var(--amber); font-weight:700;">${t.sisa}</td>
-      <td><span class="pill-btn" style="padding:0.2rem 0.6rem; font-size:0.7rem;">${t.ket}</span></td>
-    </tr>
-  `).join('');
+  if (sisa <= 0) {
+    alert('Tagihan ruangan ini sudah lunas.');
+    setTimeout(() => { checkbox.checked = false; }, 400);
+    return;
+  }
+  try {
+    await api('/api/payment', { method: 'POST', body: JSON.stringify({ room, amount: sisa, note: 'Pelunasan Total' }) });
+    await refreshAll();
+  } catch (e) {
+    alert(e.message);
+  }
+  setTimeout(() => { checkbox.checked = false; }, 400);
+}
+
+async function loadPayments() {
+  const rows = (await api('/api/payments')).rows;
+  const tbody = $('paymentHistoryTbody');
+  $('statTransactionsCount').textContent = rows.length;
+
+  tbody.innerHTML = rows.length ? rows.map(t => {
+    const d = lastState && lastState.rooms[String(t.room)];
+    const bill = d && d.bill;
+    const sisa = bill ? Math.max(0, (bill.total_cost || 0) - (bill.paid_amount || 0)) : 0;
+    return `
+      <tr>
+        <td>${new Date(t.timestamp).toLocaleString('id-ID')}</td>
+        <td><b>Ruang ${t.room}</b></td>
+        <td style="color: var(--emerald); font-weight:700;">+ ${formatRp(t.amount)}</td>
+        <td style="color: var(--amber); font-weight:700;">${formatRp(sisa)}</td>
+        <td><span class="pill-btn" style="padding:0.2rem 0.6rem; font-size:0.7rem;">${t.note || 'Pembayaran'}</span></td>
+      </tr>`;
+  }).join('') : `<tr><td colspan="5" style="text-align:center; color:var(--text-light); padding:1.5rem; font-style:italic;">Belum ada riwayat transaksi pembayaran.</td></tr>`;
 }
 
 // ================= AI CONSULTANT & CHATBOT =================
+function escapeHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
 function appendAIChatMessage(sender, text, isAi = false) {
   const win = $('aiChatWindow');
   const div = document.createElement('div');
   div.className = `chat-bubble ${isAi ? 'ai' : 'user'}`;
-  div.innerHTML = `<b>${sender}:</b> ${text.replace(/\n/g, '<br>')}`;
+  div.innerHTML = `<b>${sender}:</b> ${escapeHtml(text).replace(/\n/g, '<br>')}`;
   win.appendChild(div);
   win.scrollTop = win.scrollHeight;
   return div;
@@ -379,43 +342,22 @@ async function sendAIChat() {
 
   appendAIChatMessage('Anda', prompt, false);
   inp.value = '';
-
   const loadingMsg = appendAIChatMessage('🤖 EQUILINK AI', 'Menganalisis data konsumsi kamar...', true);
 
   try {
-    const res = await fetch('/api/ai', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: prompt })
-    }).catch(() => null);
-
-    if (res && res.ok) {
-      const json = await res.json();
-      loadingMsg.innerHTML = `<b>🤖 EQUILINK AI:</b> ${json.answer.replace(/\n/g, '<br>')}`;
-    } else {
-      setTimeout(() => {
-        let reply = "Berdasarkan sensor EQUILINK terkini, pasokan tegangan listrik PLN normal di 220V. ";
-        if (prompt.toLowerCase().includes('ruang 1') || prompt.toLowerCase().includes('kamar 1')) {
-          reply += `Beban aktif Ruang 1 saat ini adalah ${localData.rooms['1'].power.toFixed(1)}W dengan akumulasi ${localData.rooms['1'].energy_kwh.toFixed(3)} kWh. Disarankan menonaktifkan saklar Power saat meninggalkan kamar guna menghindari konsumsi phantom load.`;
-        } else if (prompt.toLowerCase().includes('air')) {
-          reply += `Ketinggian air tangki saat ini ${localData.water.level_percent}%. Biaya dibagi secara proporsional dan adil antar kedua ruangan.`;
-        } else {
-          reply += "Tips efisiensi: pastikan lampu dimatikan saat siang hari dan gunakan saklar toggle Power untuk mematikan perangkat elektronik yang tidak digunakan secara total.";
-        }
-        loadingMsg.innerHTML = `<b>🤖 EQUILINK AI:</b> ${reply}`;
-      }, 700);
-    }
+    const json = await api('/api/ai', { method: 'POST', body: JSON.stringify({ query: prompt }) });
+    loadingMsg.innerHTML = `<b>🤖 EQUILINK AI:</b> ${escapeHtml(json.answer).replace(/\n/g, '<br>')}`;
   } catch (err) {
-    loadingMsg.innerHTML = `<b>🤖 EQUILINK AI:</b> Terjadi kendala koneksi ke server AI.`;
+    loadingMsg.innerHTML = `<b>🤖 EQUILINK AI:</b> ${escapeHtml(err.message)}`;
   }
 }
 
 function triggerAutoAIAnalysis() {
-  $('aiInputPrompt').value = 'Berikan ringkasan analisis efisiensi energi dan air kedua kamar saat ini.';
+  $('aiInputPrompt').value = 'Berikan ringkasan analisis efisiensi energi dan air kedua kamar saat ini, beserta rekomendasi hemat energi.';
   sendAIChat();
 }
 
-// ================= QUIZ LOGIC =================
+// ================= QUIZ LOGIC (statis, tidak ada bug — dibiarkan sama) =================
 function checkQuizAnswer(selectedIdx) {
   const res = $('quizResultMsg');
   if (selectedIdx === 1) {
@@ -425,18 +367,14 @@ function checkQuizAnswer(selectedIdx) {
   }
 }
 
-function handleNewPeriod() {
-  if (confirm('Tutup periode penagihan aktif saat ini dan mulai siklus baru?')) {
-    [1, 2].forEach(rm => {
-      localData.rooms[String(rm)].energy_kwh = 0;
-      localData.rooms[String(rm)].cost_elec = 0;
-      localData.rooms[String(rm)].cost_water = 0;
-      localData.rooms[String(rm)].paid = 0;
-    });
-    refreshDashboard();
+// ================= SETTINGS: TUTUP PERIODE (Admin, panggilan asli ke server) =================
+async function handleNewPeriod() {
+  if (!confirm('Tutup periode penagihan aktif saat ini dan mulai siklus baru? Ini akan mereset akumulasi kWh & tagihan KEDUA ruangan di server.')) return;
+  try {
+    await api('/api/period/new', { method: 'POST' });
+    await refreshAll();
     alert('Periode baru berhasil dimulai.');
+  } catch (e) {
+    alert(e.message);
   }
 }
-
-// Jalankan baris log awal saat halaman dibuka
-pushHistoryRow();
