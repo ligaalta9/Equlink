@@ -12,1114 +12,173 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
-    /* =========================================================
-       EQUILINK — STYLESHEET TERPADU (INTERNAL CSS)
-       ========================================================= */
     :root {
-      --bg-app: #F3F6FA;
-      --surface: #FFFFFF;
-      --surface-subtle: #F8FAFC;
-      --border: #E5E9F0;
-      --border-light: #F1F4F9;
-      
-      --text-main: #1E293B;
-      --text-muted: #64748B;
-      --text-light: #94A3B8;
-
-      --brand-blue: #0284C7;
-      --brand-navy: #0E294B;
-      --brand-gradient: linear-gradient(135deg, #0E294B 0%, #0284C7 100%);
-      
-      --emerald: #10B981;
-      --emerald-soft: #DCFCE7;
-      --amber: #F59E0B;
-      --amber-soft: #FEF3C7;
-      --rose: #EF4444;
-      --rose-soft: #FEE2E2;
-      --purple: #8B5CF6;
-      --purple-soft: #EDE9FE;
-      --cyan: #06B6D4;
-      --cyan-soft: #E0F2FE;
-
-      --sidebar-w: 260px;
-      --radius-lg: 20px;
-      --radius-md: 14px;
-      --radius-sm: 10px;
-      --shadow-sm: 0 4px 20px -2px rgba(15, 41, 75, 0.05);
-      --shadow-md: 0 10px 25px -4px rgba(15, 41, 75, 0.08);
+      --bg-app: #F3F6FA; --surface: #FFFFFF; --surface-subtle: #F8FAFC; --border: #E5E9F0; --border-light: #F1F4F9;
+      --text-main: #1E293B; --text-muted: #64748B; --text-light: #94A3B8;
+      --brand-blue: #0284C7; --brand-navy: #0E294B; --brand-gradient: linear-gradient(135deg, #0E294B 0%, #0284C7 100%);
+      --emerald: #10B981; --emerald-soft: #DCFCE7; --amber: #F59E0B; --amber-soft: #FEF3C7;
+      --rose: #EF4444; --rose-soft: #FEE2E2; --purple: #8B5CF6; --purple-soft: #EDE9FE; --cyan: #06B6D4; --cyan-soft: #E0F2FE;
+      --sidebar-w: 260px; --radius-lg: 20px; --radius-md: 14px; --radius-sm: 10px;
+      --shadow-sm: 0 4px 20px -2px rgba(15, 41, 75, 0.05); --shadow-md: 0 10px 25px -4px rgba(15, 41, 75, 0.08);
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background-color: var(--bg-app);
-      color: var(--text-main);
-      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-    }
-
+    body { background-color: var(--bg-app); color: var(--text-main); font-family: 'Plus Jakarta Sans', system-ui, sans-serif; min-height: 100vh; -webkit-font-smoothing: antialiased; }
     .meter-font { font-family: 'JetBrains Mono', monospace; }
     .hidden { display: none !important; }
-
-    /* ================= LOGIN SCREEN ================= */
-    .login-container {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-      background: radial-gradient(circle at 10% 20%, rgba(2, 132, 199, 0.08), transparent 45%),
-                  radial-gradient(circle at 90% 80%, rgba(14, 41, 75, 0.06), transparent 45%),
-                  var(--bg-app);
-    }
-
-    .login-card {
-      width: 100%;
-      max-width: 440px;
-      background: var(--surface);
-      border-radius: 28px;
-      padding: 2.75rem 2.25rem 2.25rem;
-      box-shadow: 0 20px 45px -15px rgba(14, 41, 75, 0.12);
-      border: 1px solid rgba(229, 233, 240, 0.8);
-      text-align: center;
-    }
-
-    .login-logo-badge {
-      width: 58px;
-      height: 58px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, var(--brand-navy), var(--brand-blue));
-      color: #fff;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      margin-bottom: 1.25rem;
-      box-shadow: 0 8px 18px rgba(2, 132, 199, 0.3);
-    }
-
-    .login-title {
-      font-size: 1.7rem;
-      font-weight: 800;
-      color: var(--brand-navy);
-      letter-spacing: -0.02em;
-    }
-
-    .login-subtitle {
-      font-size: 0.84rem;
-      color: var(--text-muted);
-      margin-top: 0.35rem;
-      margin-bottom: 2rem;
-      line-height: 1.5;
-    }
-
-    .form-group {
-      text-align: left;
-      margin-bottom: 1.25rem;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 0.4rem;
-    }
-
-    .form-control {
-      width: 100%;
-      background: #FAFCFF;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0.75rem 1rem;
-      font-size: 0.9rem;
-      color: var(--text-main);
-      outline: none;
-      transition: all 0.2s;
-    }
-
-    .form-control:focus {
-      border-color: var(--brand-blue);
-      background: #FFF;
-      box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.12);
-    }
-
-    .btn-login {
-      width: 100%;
-      background: linear-gradient(90deg, #103B64 0%, #0284C7 100%);
-      color: #FFF;
-      border: none;
-      padding: 0.85rem;
-      font-size: 0.92rem;
-      font-weight: 700;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      margin-top: 0.5rem;
-      transition: all 0.2s ease;
-      box-shadow: 0 8px 20px -4px rgba(2, 132, 199, 0.4);
-    }
-
-    .btn-login:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 24px -4px rgba(2, 132, 199, 0.5);
-    }
-
-    .login-error {
-      color: var(--rose);
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-top: 0.75rem;
-      min-height: 1.2rem;
-    }
-
-    .login-footer-info {
-      margin-top: 2rem;
-      padding-top: 1.25rem;
-      border-top: 1px solid var(--border-light);
-      text-align: left;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
+    .login-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; background: var(--bg-app); }
+    .login-card { width: 100%; max-width: 440px; background: var(--surface); border-radius: 28px; padding: 2.75rem 2.25rem 2.25rem; box-shadow: var(--shadow-md); border: 1px solid var(--border); text-align: center; }
+    .login-logo-badge { width: 58px; height: 58px; border-radius: 18px; background: var(--brand-gradient); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 1.25rem; }
+    .login-title { font-size: 1.7rem; font-weight: 800; color: var(--brand-navy); }
+    .login-subtitle { font-size: 0.84rem; color: var(--text-muted); margin-top: 0.35rem; margin-bottom: 2rem; }
+    .form-group { text-align: left; margin-bottom: 1.25rem; }
+    .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem; }
+    .form-control { width: 100%; background: #FAFCFF; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; font-size: 0.9rem; color: var(--text-main); outline: none; }
+    .form-control:focus { border-color: var(--brand-blue); background: #FFF; box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.12); }
+    .btn-login { width: 100%; background: var(--brand-gradient); color: #FFF; border: none; padding: 0.85rem; font-size: 0.92rem; font-weight: 700; border-radius: var(--radius-sm); cursor: pointer; margin-top: 0.5rem; }
+    .login-error { color: var(--rose); font-size: 0.8rem; font-weight: 600; margin-top: 0.75rem; min-height: 1.2rem; }
+    .login-footer-info { margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--border-light); text-align: left; font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; }
     .login-footer-info b { color: var(--brand-navy); }
     .credential-link { color: var(--brand-blue); font-weight: 600; text-decoration: none; }
-
-    /* ================= APP LAYOUT ================= */
-    .app-layout {
-      display: flex;
-      min-height: 100vh;
-    }
-
-    aside.sidebar {
-      width: var(--sidebar-w);
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      padding: 1.75rem 1.25rem;
-      display: flex;
-      flex-direction: column;
-      z-index: 50;
-      transition: transform 0.25s ease;
-    }
-
-    .sidebar-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0 0.5rem 2rem 0.5rem;
-    }
-
-    .sidebar-logo {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--brand-navy), var(--brand-blue));
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.15rem;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
-    }
-
-    .sidebar-title {
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: var(--brand-navy);
-      letter-spacing: -0.01em;
-    }
-
-    .sidebar-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      flex: 1;
-    }
-
-    .nav-link {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-      padding: 0.75rem 1rem;
-      background: transparent;
-      border: 1px solid transparent;
-      border-radius: var(--radius-sm);
-      color: var(--text-muted);
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: left;
-      transition: all 0.15s ease;
-      width: 100%;
-    }
-
+    .app-layout { display: flex; min-height: 100vh; }
+    aside.sidebar { width: var(--sidebar-w); background: var(--surface); border-right: 1px solid var(--border); position: fixed; top: 0; bottom: 0; left: 0; padding: 1.75rem 1.25rem; display: flex; flex-direction: column; z-index: 50; }
+    .sidebar-brand { display: flex; align-items: center; gap: 0.75rem; padding: 0 0.5rem 2rem 0.5rem; }
+    .sidebar-logo { width: 38px; height: 38px; border-radius: 12px; background: var(--brand-gradient); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; }
+    .sidebar-title { font-size: 1.35rem; font-weight: 800; color: var(--brand-navy); }
+    .sidebar-nav { display: flex; flex-direction: column; gap: 0.4rem; flex: 1; }
+    .nav-link { display: flex; align-items: center; gap: 0.85rem; padding: 0.75rem 1rem; background: transparent; border: 1px solid transparent; border-radius: var(--radius-sm); color: var(--text-muted); font-size: 0.88rem; font-weight: 600; cursor: pointer; text-align: left; width: 100%; }
     .nav-link i { width: 18px; font-size: 1rem; }
-    .nav-link:hover {
-      background: #F1F5F9;
-      color: var(--brand-navy);
-    }
-
-    .nav-link.active {
-      background: #EBF5FB;
-      color: #0284C7;
-      border-color: rgba(2, 132, 199, 0.2);
-    }
-
-    .sidebar-user {
-      padding-top: 1rem;
-      border-top: 1px solid var(--border);
-    }
-
-    .user-profile-card {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.6rem 0.75rem;
-      background: #F8FAFC;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      margin-bottom: 0.75rem;
-    }
-
-    .user-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: #0E294B;
-      color: #FFF;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.95rem;
-    }
-
-    .user-meta-name {
-      font-size: 0.82rem;
-      font-weight: 800;
-      color: var(--brand-navy);
-    }
-
-    .user-meta-role {
-      font-size: 0.68rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-    }
-
-    .btn-logout {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      color: var(--text-main);
-      font-weight: 700;
-      font-size: 0.82rem;
-      padding: 0.65rem;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .btn-logout:hover {
-      border-color: var(--rose);
-      color: var(--rose);
-      background: var(--rose-soft);
-    }
-
-    main.main-viewport {
-      margin-left: var(--sidebar-w);
-      flex: 1;
-      padding: 2rem 2.5rem 3.5rem;
-      min-width: 0;
-    }
-
-    .top-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 2rem;
-      gap: 1rem;
-    }
-
-    .header-left h1 {
-      font-size: 1.65rem;
-      font-weight: 800;
-      color: var(--brand-navy);
-      letter-spacing: -0.02em;
-    }
-
-    .header-left p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 0.25rem;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-    }
-
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      font-size: 0.78rem;
-      font-weight: 700;
-      padding: 0.35rem 0.85rem;
-      border-radius: 999px;
-      background: var(--emerald-soft);
-      color: var(--emerald);
-    }
-
-    .date-badge {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .stats-summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.25rem;
-      margin-bottom: 2rem;
-    }
-
-    .summary-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.15rem 1.35rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .summary-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.25rem;
-    }
-
+    .nav-link:hover { background: #F1F5F9; color: var(--brand-navy); }
+    .nav-link.active { background: #EBF5FB; color: #0284C7; border-color: rgba(2, 132, 199, 0.2); }
+    .sidebar-user { padding-top: 1rem; border-top: 1px solid var(--border); }
+    .user-profile-card { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem; background: #F8FAFC; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 0.75rem; }
+    .user-avatar { width: 36px; height: 36px; border-radius: 10px; background: #0E294B; color: #FFF; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; }
+    .user-meta-name { font-size: 0.82rem; font-weight: 800; color: var(--brand-navy); }
+    .user-meta-role { font-size: 0.68rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+    .btn-logout { width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background: var(--surface); border: 1.5px solid var(--border); color: var(--text-main); font-weight: 700; font-size: 0.82rem; padding: 0.65rem; border-radius: var(--radius-sm); cursor: pointer; }
+    .btn-logout:hover { border-color: var(--rose); color: var(--rose); background: var(--rose-soft); }
+    main.main-viewport { margin-left: var(--sidebar-w); flex: 1; padding: 2rem 2.5rem 3.5rem; min-width: 0; }
+    .top-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; gap: 1rem; }
+    .header-left h1 { font-size: 1.65rem; font-weight: 800; color: var(--brand-navy); }
+    .header-left p { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .header-right { display: flex; align-items: center; gap: 0.85rem; }
+    .status-badge { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.78rem; font-weight: 700; padding: 0.35rem 0.85rem; border-radius: 999px; background: var(--emerald-soft); color: var(--emerald); }
+    .date-badge { font-size: 0.82rem; font-weight: 600; color: var(--text-muted); }
+    .stats-summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
+    .summary-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.15rem 1.35rem; display: flex; align-items: center; gap: 1rem; box-shadow: var(--shadow-sm); }
+    .summary-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
     .summary-icon.navy { background: #0E294B; color: #FFF; }
     .summary-icon.emerald { background: var(--emerald-soft); color: var(--emerald); }
     .summary-icon.amber { background: var(--amber-soft); color: var(--amber); }
     .summary-icon.purple { background: var(--purple-soft); color: var(--purple); }
-
-    .summary-details span {
-      display: block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 0.2rem;
-    }
-
-    .summary-details b {
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: var(--brand-navy);
-    }
-
-    .section-header-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.25rem;
-    }
-
-    .section-header-bar h2 {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: var(--brand-navy);
-    }
-
-    .section-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-
-    .pill-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.4rem 0.85rem;
-      border-radius: 999px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
+    .summary-details span { display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.2rem; }
+    .summary-details b { font-size: 1.35rem; font-weight: 800; color: var(--brand-navy); }
+    .section-header-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+    .section-header-bar h2 { font-size: 1.15rem; font-weight: 800; color: var(--brand-navy); }
+    .section-actions { display: flex; align-items: center; gap: 0.6rem; }
+    .pill-btn { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.4rem 0.85rem; border-radius: 999px; font-size: 0.78rem; font-weight: 700; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); cursor: pointer; }
     .pill-btn:hover { background: #F1F5F9; color: var(--brand-navy); }
     .pill-btn.btn-reset { border-color: rgba(239, 68, 68, 0.3); color: var(--rose); background: #FFF; }
     .pill-btn.btn-reset:hover { background: var(--rose-soft); }
-
-    .rooms-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .room-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.4rem;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .room-card-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 1.1rem;
-    }
-
-    .room-card-header h3 {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: var(--brand-navy);
-    }
-
-    .room-card-header p {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 0.15rem;
-    }
-
-    .listening-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-size: 0.68rem;
-      font-weight: 800;
-      color: #0284C7;
-      background: #E0F2FE;
-      padding: 0.3rem 0.75rem;
-      border-radius: 999px;
-      letter-spacing: 0.03em;
-    }
-
-    .readout-duo {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
-      margin-bottom: 0.85rem;
-    }
-
-    .dark-readout-tile {
-      background: linear-gradient(170deg, #0B2239 0%, #0F3255 100%);
-      border-radius: 14px;
-      padding: 0.85rem 1rem;
-      color: #FFF;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    }
-
-    .dark-readout-tile .metric-label {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      color: rgba(255, 255, 255, 0.55);
-      text-transform: uppercase;
-    }
-
-    .dark-readout-tile .metric-value {
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-top: 0.2rem;
-      color: #F8FAFC;
-    }
-
-    .dark-readout-tile .metric-unit {
-      font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.5);
-      margin-left: 0.15rem;
-    }
-
-    .mini-metrics-duo {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-    }
-
-    .mini-metric-card {
-      background: #F8FAFC;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0.65rem 0.85rem;
-    }
-
-    .mini-metric-card .label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
-
-    .mini-metric-card .val {
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: var(--brand-navy);
-      margin-top: 0.2rem;
-    }
-
-    .load-bar-wrapper {
-      margin-bottom: 1.1rem;
-    }
-
-    .load-bar-label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 0.35rem;
-    }
-
-    .load-bar-track {
-      width: 100%;
-      height: 7px;
-      background: #E2E8F0;
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .load-bar-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #0284C7, #06B6D4);
-      border-radius: 999px;
-      transition: width 0.4s ease;
-    }
-
-    .cost-split-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
-      margin-bottom: 1.15rem;
-      padding-bottom: 1.1rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .cost-item {
-      background: #F8FAFC;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0.65rem 0.85rem;
-    }
-
-    .cost-item .title {
-      font-size: 0.68rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .cost-item .cost-val {
-      font-size: 0.98rem;
-      font-weight: 800;
-      color: var(--brand-navy);
-      margin-top: 0.15rem;
-    }
-
-    /* SAKLAR SLIDE BOLA (BALL SLIDER TOGGLE) */
-    .relay-control-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.55rem 0;
-    }
-
-    .relay-label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--brand-navy);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .switch-slide-bola {
-      position: relative;
-      display: inline-block;
-      width: 50px;
-      height: 28px;
-    }
-
-    .switch-slide-bola input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .ball-slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #CBD5E1;
-      transition: .25s cubic-bezier(0.4, 0, 0.2, 1);
-      border-radius: 34px;
-    }
-
-    .ball-slider:before {
-      position: absolute;
-      content: "";
-      height: 22px;
-      width: 22px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .25s cubic-bezier(0.4, 0, 0.2, 1);
-      border-radius: 50%;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.22);
-    }
-
-    .switch-slide-bola input:checked + .ball-slider {
-      background: linear-gradient(90deg, #0EA5E9, #0284C7);
-    }
-
-    .switch-slide-bola input:checked + .ball-slider:before {
-      transform: translateX(22px);
-    }
-
-    .panel-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.4rem;
-      box-shadow: var(--shadow-sm);
-      margin-bottom: 1.5rem;
-    }
-
-    .panel-card-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      margin-bottom: 1.25rem;
-    }
-
-    .panel-card-title {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .panel-card-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.15rem;
-    }
-
+    .rooms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.5rem; }
+    .room-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.4rem; box-shadow: var(--shadow-sm); }
+    .room-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.1rem; }
+    .room-card-header h3 { font-size: 1.15rem; font-weight: 800; color: var(--brand-navy); }
+    .room-card-header p { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem; }
+    .listening-badge { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.68rem; font-weight: 800; color: #0284C7; background: #E0F2FE; padding: 0.3rem 0.75rem; border-radius: 999px; }
+    .readout-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem; }
+    .dark-readout-tile { background: linear-gradient(170deg, #0B2239 0%, #0F3255 100%); border-radius: 14px; padding: 0.85rem 1rem; color: #FFF; }
+    .dark-readout-tile .metric-label { font-size: 0.65rem; font-weight: 700; color: rgba(255, 255, 255, 0.55); text-transform: uppercase; }
+    .dark-readout-tile .metric-value { font-size: 1.4rem; font-weight: 700; margin-top: 0.2rem; color: #F8FAFC; }
+    .dark-readout-tile .metric-unit { font-size: 0.75rem; color: rgba(255, 255, 255, 0.5); margin-left: 0.15rem; }
+    .mini-metrics-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem; }
+    .mini-metric-card { background: #F8FAFC; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.65rem 0.85rem; }
+    .mini-metric-card .label { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 0.35rem; }
+    .mini-metric-card .val { font-size: 0.95rem; font-weight: 800; color: var(--brand-navy); margin-top: 0.2rem; }
+    .load-bar-wrapper { margin-bottom: 1.1rem; }
+    .load-bar-label { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem; }
+    .load-bar-track { width: 100%; height: 7px; background: #E2E8F0; border-radius: 999px; overflow: hidden; }
+    .load-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #0284C7, #06B6D4); border-radius: 999px; transition: width 0.4s ease; }
+    .cost-split-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.15rem; padding-bottom: 1.1rem; border-bottom: 1px solid var(--border); }
+    .cost-item { background: #F8FAFC; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.65rem 0.85rem; }
+    .cost-item .title { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem; }
+    .cost-item .cost-val { font-size: 0.98rem; font-weight: 800; color: var(--brand-navy); margin-top: 0.15rem; }
+    .relay-control-row { display: flex; align-items: center; justify-content: space-between; padding: 0.55rem 0; }
+    .relay-label { font-size: 0.85rem; font-weight: 600; color: var(--brand-navy); display: flex; align-items: center; gap: 0.5rem; }
+    .switch-slide-bola { position: relative; display: inline-block; width: 50px; height: 28px; }
+    .switch-slide-bola input { opacity: 0; width: 0; height: 0; }
+    .ball-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #CBD5E1; transition: .25s; border-radius: 34px; }
+    .ball-slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background-color: white; transition: .25s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.22); }
+    .switch-slide-bola input:checked + .ball-slider { background: linear-gradient(90deg, #0EA5E9, #0284C7); }
+    .switch-slide-bola input:checked + .ball-slider:before { transform: translateX(22px); }
+    .panel-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.4rem; box-shadow: var(--shadow-sm); margin-bottom: 1.5rem; }
+    .panel-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.25rem; }
+    .panel-card-title { display: flex; align-items: center; gap: 0.75rem; }
+    .panel-card-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; }
     .panel-card-icon.cyan { background: var(--cyan-soft); color: var(--cyan); }
     .panel-card-icon.purple { background: var(--purple-soft); color: var(--purple); }
     .panel-card-icon.emerald { background: var(--emerald-soft); color: var(--emerald); }
-
-    .tank-monitoring-content {
-      display: grid;
-      grid-template-columns: 1.2fr 2fr 1.5fr;
-      align-items: center;
-      gap: 2rem;
-    }
-
-    .tank-sensor-metric .label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 0.25rem;
-    }
-
-    .tank-sensor-metric .val {
-      font-size: 2rem;
-      font-weight: 800;
-      color: #0284C7;
-    }
-
-    .tank-visual-container {
-      text-align: center;
-    }
-
-    .tank-box {
-      position: relative;
-      width: 100%;
-      height: 95px;
-      background: #F1F5F9;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      overflow: hidden;
-    }
-
-    .tank-water-fill {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 0%;
-      background: linear-gradient(180deg, #38BDF8 0%, #0284C7 100%);
-      transition: height 0.8s ease;
-    }
-
-    .tank-percentage-text {
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      margin-top: 0.5rem;
-    }
-
-    .tank-cost-block .label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 0.25rem;
-    }
-
-    .tank-cost-block .val {
-      font-size: 1.7rem;
-      font-weight: 800;
-      color: var(--brand-navy);
-    }
-
-    .tank-cost-block .sub {
-      font-size: 0.75rem;
-      color: var(--text-light);
-      margin-top: 0.2rem;
-    }
-
-    .history-table-wrapper {
-      overflow-x: auto;
-      max-height: 280px;
-      overflow-y: auto;
-    }
-
-    table.equilink-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-    }
-
-    table.equilink-table th {
-      font-size: 0.68rem;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      padding: 0.75rem 0.65rem;
-      border-bottom: 1.5px solid var(--border);
-      background: var(--surface);
-      position: sticky;
-      top: 0;
-      z-index: 2;
-    }
-
-    table.equilink-table td {
-      font-size: 0.8rem;
-      padding: 0.8rem 0.65rem;
-      border-bottom: 1px solid var(--border-light);
-      color: var(--text-main);
-    }
-
-    table.equilink-table tr:hover td {
-      background: #F8FAFC;
-    }
-
-    .ai-chatbox {
-      background: #F8FAFC;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 1.15rem;
-      height: 220px;
-      overflow-y: auto;
-      margin-bottom: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .chat-bubble {
-      padding: 0.85rem 1.1rem;
-      border-radius: 14px;
-      font-size: 0.85rem;
-      line-height: 1.55;
-      max-width: 85%;
-    }
-
-    .chat-bubble.ai {
-      background: #F0FDF4;
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      color: #065F46;
-      align-self: flex-start;
-    }
-
-    .chat-bubble.user {
-      background: var(--brand-navy);
-      color: #FFF;
-      align-self: flex-end;
-    }
-
-    .ai-input-row {
-      display: flex;
-      gap: 0.75rem;
-    }
-
-    .ai-input-row input {
-      flex: 1;
-      background: #FFF;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 0.75rem 1rem;
-      font-size: 0.88rem;
-      outline: none;
-      transition: all 0.15s;
-    }
-
-    .ai-input-row input:focus {
-      border-color: #0284C7;
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
-    }
-
-    .btn-gradient-blue {
-      background: linear-gradient(90deg, #0F3255 0%, #0284C7 100%);
-      color: #FFF;
-      border: none;
-      padding: 0.7rem 1.25rem;
-      font-size: 0.85rem;
-      font-weight: 700;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: all 0.2s;
-    }
-
-    .btn-gradient-blue:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(2, 132, 199, 0.35);
-    }
-
-    .settings-grid, .payment-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.25rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .config-card, .payment-room-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.4rem;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .config-title {
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: var(--brand-navy);
-      margin-bottom: 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .rate-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 0;
-      border-bottom: 1px solid var(--border-light);
-    }
-
+    .tank-monitoring-content { display: grid; grid-template-columns: 1.2fr 2fr 1.5fr; align-items: center; gap: 2rem; }
+    .tank-sensor-metric .label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.25rem; }
+    .tank-sensor-metric .val { font-size: 2rem; font-weight: 800; color: #0284C7; }
+    .tank-visual-container { text-align: center; }
+    .tank-box { position: relative; width: 100%; height: 95px; background: #F1F5F9; border-radius: 16px; border: 1px solid var(--border); overflow: hidden; }
+    .tank-water-fill { position: absolute; bottom: 0; left: 0; right: 0; height: 0%; background: linear-gradient(180deg, #38BDF8 0%, #0284C7 100%); transition: height 0.8s ease; }
+    .tank-percentage-text { font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-top: 0.5rem; }
+    .tank-cost-block .label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.25rem; }
+    .tank-cost-block .val { font-size: 1.7rem; font-weight: 800; color: var(--brand-navy); }
+    .tank-cost-block .sub { font-size: 0.75rem; color: var(--text-light); margin-top: 0.2rem; }
+    .history-table-wrapper { overflow-x: auto; max-height: 280px; overflow-y: auto; }
+    table.equilink-table { width: 100%; border-collapse: collapse; text-align: left; }
+    table.equilink-table th { font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; padding: 0.75rem 0.65rem; border-bottom: 1.5px solid var(--border); background: var(--surface); position: sticky; top: 0; z-index: 2; }
+    table.equilink-table td { font-size: 0.8rem; padding: 0.8rem 0.65rem; border-bottom: 1px solid var(--border-light); color: var(--text-main); }
+    table.equilink-table tr:hover td { background: #F8FAFC; }
+    .ai-chatbox { background: #F8FAFC; border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.15rem; height: 220px; overflow-y: auto; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .chat-bubble { padding: 0.85rem 1.1rem; border-radius: 14px; font-size: 0.85rem; line-height: 1.55; max-width: 85%; }
+    .chat-bubble.ai { background: #F0FDF4; border: 1px solid rgba(16, 185, 129, 0.2); color: #065F46; align-self: flex-start; }
+    .chat-bubble.user { background: var(--brand-navy); color: #FFF; align-self: flex-end; }
+    .ai-input-row { display: flex; gap: 0.75rem; }
+    .ai-input-row input { flex: 1; background: #FFF; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 0.75rem 1rem; font-size: 0.88rem; outline: none; }
+    .btn-gradient-blue { background: var(--brand-gradient); color: #FFF; border: none; padding: 0.7rem 1.25rem; font-size: 0.85rem; font-weight: 700; border-radius: var(--radius-sm); cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; }
+    .settings-grid, .payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+    .config-card, .payment-room-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.4rem; box-shadow: var(--shadow-sm); }
+    .config-title { font-size: 0.95rem; font-weight: 800; color: var(--brand-navy); margin-bottom: 1.1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .rate-row { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--border-light); }
     .rate-row:last-child { border-bottom: none; }
     .rate-row .label { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
     .rate-row .value { font-size: 0.95rem; font-weight: 800; color: var(--brand-navy); }
-
-    .accounts-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-
-    .account-card {
-      background: #F8FAFC;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 1rem;
-    }
-
-    .account-card .role-badge {
-      font-size: 0.68rem;
-      font-weight: 800;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .account-card .access-desc {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--brand-navy);
-      margin-top: 0.35rem;
-    }
-
-    .payment-room-card h3 {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: var(--brand-navy);
-      margin-bottom: 1rem;
-    }
-
-    .payment-stat-line {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      margin-bottom: 0.6rem;
-    }
-
-    .payment-stat-line.sisa {
-      font-size: 1rem;
-      font-weight: 800;
-      color: var(--amber);
-      margin-bottom: 1.1rem;
-    }
-
-    .lessons-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .lesson-item {
-      padding: 0.9rem 0;
-      border-bottom: 1px solid var(--border-light);
-    }
-
+    .accounts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem; }
+    .account-card { background: #F8FAFC; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem; }
+    .account-card .role-badge { font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+    .account-card .access-desc { font-size: 0.9rem; font-weight: 700; color: var(--brand-navy); margin-top: 0.35rem; }
+    .payment-room-card h3 { font-size: 1.05rem; font-weight: 800; color: var(--brand-navy); margin-bottom: 1rem; }
+    .payment-stat-line { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.6rem; }
+    .payment-stat-line.sisa { font-size: 1rem; font-weight: 800; color: var(--amber); margin-bottom: 1.1rem; }
+    .lessons-list { display: flex; flex-direction: column; gap: 1rem; }
+    .lesson-item { padding: 0.9rem 0; border-bottom: 1px solid var(--border-light); }
     .lesson-item:last-child { border-bottom: none; }
-    .lesson-item b {
-      display: block;
-      font-size: 0.95rem;
-      color: var(--brand-navy);
-      margin-bottom: 0.35rem;
-    }
-
-    .lesson-item p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      line-height: 1.55;
-    }
-
-    .quiz-options-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      margin-top: 1rem;
-    }
-
-    .quiz-opt-btn {
-      text-align: left;
-      padding: 0.75rem 1rem;
-      background: #F8FAFC;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .quiz-opt-btn:hover {
-      background: #EBF5FB;
-      border-color: #0284C7;
-      color: var(--brand-navy);
-    }
-
-    .mobile-hamburger {
-      display: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--brand-navy);
-      align-items: center;
-      justify-content: center;
-      font-size: 1.15rem;
-      cursor: pointer;
-    }
-
-    .sidebar-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(14, 41, 75, 0.4);
-      z-index: 45;
-    }
-
-    @media (max-width: 1024px) {
-      .stats-summary-grid { grid-template-columns: repeat(2, 1fr); }
-      .tank-monitoring-content { grid-template-columns: 1fr; gap: 1rem; }
-      .accounts-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 860px) {
-      aside.sidebar { transform: translateX(-100%); }
-      aside.sidebar.open { transform: translateX(0); }
-      body.sidebar-open .sidebar-overlay { display: block; }
-      .mobile-hamburger { display: flex; }
-      main.main-viewport { margin-left: 0; padding: 1.25rem 1rem; }
-      .rooms-grid, .settings-grid, .payment-grid { grid-template-columns: 1fr; }
-    }
+    .lesson-item b { display: block; font-size: 0.95rem; color: var(--brand-navy); margin-bottom: 0.35rem; }
+    .lesson-item p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.55; }
+    .quiz-options-list { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem; }
+    .quiz-opt-btn { text-align: left; padding: 0.75rem 1rem; background: #F8FAFC; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; cursor: pointer; }
+    .quiz-opt-btn:hover { background: #EBF5FB; border-color: #0284C7; color: var(--brand-navy); }
+    .mobile-hamburger { display: none; width: 40px; height: 40px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); color: var(--brand-navy); align-items: center; justify-content: center; font-size: 1.15rem; cursor: pointer; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(14, 41, 75, 0.4); z-index: 45; }
+    @media (max-width: 1024px) { .stats-summary-grid { grid-template-columns: repeat(2, 1fr); } .tank-monitoring-content { grid-template-columns: 1fr; gap: 1rem; } .accounts-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 860px) { aside.sidebar { transform: translateX(-100%); } aside.sidebar.open { transform: translateX(0); } body.sidebar-open .sidebar-overlay { display: block; } .mobile-hamburger { display: flex; } main.main-viewport { margin-left: 0; padding: 1.25rem 1rem; } .rooms-grid, .settings-grid, .payment-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 
-  <!-- ==================== LOGIN SCREEN ==================== -->
+  <!-- LOGIN SECTION -->
   <div id="loginSection" class="login-container">
     <div class="login-card">
-      <div class="login-logo-badge">
-        <i class="fa-solid fa-scale-balanced"></i>
-      </div>
+      <div class="login-logo-badge"><i class="fa-solid fa-scale-balanced"></i></div>
       <h2 class="login-title">EQUILINK</h2>
       <p class="login-subtitle">Sistem Edukasi Keadilan Penggunaan Energi &amp; Air berbasis IoT + AI</p>
-
-      <div class="form-group">
-        <label>Username</label>
-        <input id="loginUser" class="form-control" placeholder="Masukkan username" value="admin">
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input id="loginPass" type="password" class="form-control" placeholder="Masukkan password" value="admin123">
-      </div>
-
+      <div class="form-group"><label>Username</label><input id="loginUser" class="form-control" placeholder="Masukkan username" value="admin"></div>
+      <div class="form-group"><label>Password</label><input id="loginPass" type="password" class="form-control" placeholder="Masukkan password" value="admin123"></div>
       <button class="btn-login" onclick="handleLogin()">Masuk Dashboard</button>
       <div id="loginErrMsg" class="login-error"></div>
-
       <div class="login-footer-info">
         <b>Kredensial Akses</b><br>
         Admin: <a class="credential-link" href="#" onclick="fillLogin('admin','admin123')">admin</a> / admin123<br>
@@ -1129,35 +188,20 @@
     </div>
   </div>
 
-  <!-- ==================== MAIN APPLICATION ==================== -->
+  <!-- MAIN APPLICATION -->
   <div id="appSection" class="app-layout hidden">
-    
-    <!-- Sidebar Overlay untuk Mobile -->
     <div id="sidebarOverlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
-
-    <!-- SIDEBAR -->
     <aside id="mainSidebar" class="sidebar">
       <div class="sidebar-brand">
         <div class="sidebar-logo"><i class="fa-solid fa-scale-balanced"></i></div>
         <div class="sidebar-title">EQUILINK</div>
       </div>
-
       <nav class="sidebar-nav">
-        <button class="nav-link active" data-nav="dashboard" onclick="navTo('dashboard')">
-          <i class="fa-solid fa-table-columns"></i> Dashboard
-        </button>
-        <button class="nav-link" data-nav="education" onclick="navTo('education')">
-          <i class="fa-solid fa-graduation-cap"></i> Edukasi
-        </button>
-        <button class="nav-link" data-nav="payment" onclick="navTo('payment')">
-          <i class="fa-solid fa-credit-card"></i> Payment
-        </button>
-        <button id="settingsNavBtn" class="nav-link" data-nav="settings" onclick="navTo('settings')">
-          <i class="fa-solid fa-sliders"></i> Room Settings
-        </button>
+        <button class="nav-link active" data-nav="dashboard" onclick="navTo('dashboard')"><i class="fa-solid fa-table-columns"></i> Dashboard</button>
+        <button class="nav-link" data-nav="education" onclick="navTo('education')"><i class="fa-solid fa-graduation-cap"></i> Edukasi</button>
+        <button class="nav-link" data-nav="payment" onclick="navTo('payment')"><i class="fa-solid fa-credit-card"></i> Payment</button>
+        <button id="settingsNavBtn" class="nav-link" data-nav="settings" onclick="navTo('settings')"><i class="fa-solid fa-sliders"></i> Room Settings</button>
       </nav>
-
-      <!-- Profil Pengguna & Keluar -->
       <div class="sidebar-user">
         <div class="user-profile-card">
           <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
@@ -1166,16 +210,11 @@
             <div id="loggedUserRole" class="user-meta-role">ADMINISTRATOR</div>
           </div>
         </div>
-        <button class="btn-logout" onclick="handleLogout()">
-          <i class="fa-solid fa-right-from-bracket"></i> Keluar
-        </button>
+        <button class="btn-logout" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
       </div>
     </aside>
 
-    <!-- VIEWPORT UTAMA -->
     <main class="main-viewport">
-      
-      <!-- Header Atas -->
       <header class="top-header">
         <div style="display: flex; align-items: center; gap: 0.85rem;">
           <button class="mobile-hamburger" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
@@ -1190,848 +229,382 @@
         </div>
       </header>
 
-      <!-- ================= 1. PAGE: DASHBOARD ================= -->
+      <!-- PAGE: DASHBOARD -->
       <section id="page-dashboard" class="app-page">
-        
-        <!-- Grid Ringkasan 4 Kartu Metrik Teratas -->
         <div class="stats-summary-grid">
-          <div class="summary-card">
-            <div class="summary-icon navy"><i class="fa-solid fa-house"></i></div>
-            <div class="summary-details">
-              <span>Total Rooms</span>
-              <b id="statTotalRooms">2</b>
-            </div>
-          </div>
-          <div class="summary-card">
-            <div class="summary-icon emerald"><i class="fa-solid fa-heart-pulse"></i></div>
-            <div class="summary-details">
-              <span>System Status</span>
-              <b style="color: var(--emerald);">Healthy</b>
-            </div>
-          </div>
-          <div class="summary-card">
-            <div class="summary-icon amber"><i class="fa-solid fa-bolt"></i></div>
-            <div class="summary-details">
-              <span>Energy Grid</span>
-              <b>Stable</b>
-            </div>
-          </div>
-          <div class="summary-card">
-            <div class="summary-icon purple"><i class="fa-solid fa-file-invoice"></i></div>
-            <div class="summary-details">
-              <span>Transactions</span>
-              <b id="statTransactionsCount">0</b>
-            </div>
-          </div>
+          <div class="summary-card"><div class="summary-icon navy"><i class="fa-solid fa-house"></i></div><div class="summary-details"><span>Total Rooms</span><b id="statTotalRooms">2</b></div></div>
+          <div class="summary-card"><div class="summary-icon emerald"><i class="fa-solid fa-heart-pulse"></i></div><div class="summary-details"><span>System Status</span><b style="color: var(--emerald);">Healthy</b></div></div>
+          <div class="summary-card"><div class="summary-icon amber"><i class="fa-solid fa-bolt"></i></div><div class="summary-details"><span>Energy Grid</span><b>Stable</b></div></div>
+          <div class="summary-card"><div class="summary-icon purple"><i class="fa-solid fa-file-invoice"></i></div><div class="summary-details"><span>Transactions</span><b id="statTransactionsCount">0</b></div></div>
         </div>
 
-        <!-- Judul Bagian Monitoring Kamar -->
         <div class="section-header-bar">
           <h2>Room Monitoring</h2>
           <div class="section-actions">
             <span class="pill-btn"><i class="fa-solid fa-layer-group"></i> 2 Rooms</span>
             <button class="pill-btn btn-reset" onclick="resetTelemetry()"><i class="fa-solid fa-rotate-left"></i> Reset All</button>
-            <button class="pill-btn" onclick="refreshDashboard()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+            <button class="pill-btn" onclick="fetchState()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
           </div>
         </div>
 
-        <!-- Kartu Monitoring Kamar (Room 1 & Room 2) -->
         <div class="rooms-grid">
-          
           <!-- ROOM 1 -->
           <div class="room-card" data-room="1">
-            <div class="room-card-header">
-              <div>
-                <h3>Room 1</h3>
-                <p>Utility Monitor · PZEM-004T #1</p>
-              </div>
-              <span class="listening-badge"><i class="fa-solid fa-circle" style="font-size: 0.45rem;"></i> LISTENING</span>
-            </div>
-
-            <!-- Meter Box Voltage & Current -->
+            <div class="room-card-header"><div><h3>Room 1</h3><p>Utility Monitor · PZEM-004T #1</p></div><span class="listening-badge"><i class="fa-solid fa-circle" style="font-size: 0.45rem;"></i> LISTENING</span></div>
             <div class="readout-duo">
-              <div class="dark-readout-tile">
-                <div class="metric-label">VOLTAGE</div>
-                <div class="metric-value meter-font"><span id="r1_volt">0.0</span><span class="metric-unit">V</span></div>
-              </div>
-              <div class="dark-readout-tile">
-                <div class="metric-label">CURRENT</div>
-                <div class="metric-value meter-font"><span id="r1_amp">0.00</span><span class="metric-unit">A</span></div>
-              </div>
+              <div class="dark-readout-tile"><div class="metric-label">VOLTAGE</div><div class="metric-value meter-font"><span id="r1_volt">0.0</span><span class="metric-unit">V</span></div></div>
+              <div class="dark-readout-tile"><div class="metric-label">CURRENT</div><div class="metric-value meter-font"><span id="r1_amp">0.00</span><span class="metric-unit">A</span></div></div>
             </div>
-
-            <!-- Mini Metrics: DAYA & ENERGI -->
             <div class="mini-metrics-duo">
-              <div class="mini-metric-card">
-                <div class="label"><i class="fa-regular fa-clock"></i> DAYA</div>
-                <div class="val"><span id="r1_watt">0.0</span> W</div>
-              </div>
-              <div class="mini-metric-card">
-                <div class="label"><i class="fa-solid fa-battery-half"></i> ENERGI</div>
-                <div class="val"><span id="r1_kwh">0.000</span> kWh</div>
-              </div>
+              <div class="mini-metric-card"><div class="label"><i class="fa-regular fa-clock"></i> DAYA</div><div class="val"><span id="r1_watt">0.0</span> W</div></div>
+              <div class="mini-metric-card"><div class="label"><i class="fa-solid fa-battery-half"></i> ENERGI</div><div class="val"><span id="r1_kwh">0.000</span> kWh</div></div>
             </div>
-
-            <!-- Gauge Indikator Beban Daya -->
-            <div class="load-bar-wrapper">
-              <div class="load-bar-label">Beban Daya (skala 0–900W)</div>
-              <div class="load-bar-track">
-                <div id="r1_loadbar" class="load-bar-fill"></div>
-              </div>
-            </div>
-
-            <!-- Estimasi Biaya: Listrik & Air -->
+            <div class="load-bar-wrapper"><div class="load-bar-label">Beban Daya (skala 0–900W)</div><div class="load-bar-track"><div id="r1_loadbar" class="load-bar-fill"></div></div></div>
             <div class="cost-split-row">
-              <div class="cost-item">
-                <div class="title"><i class="fa-solid fa-bolt" style="color: var(--emerald);"></i> LISTRIK</div>
-                <div class="cost-val" id="r1_cost_elec">Rp 0</div>
-              </div>
-              <div class="cost-item">
-                <div class="title"><i class="fa-solid fa-droplet" style="color: var(--cyan);"></i> AIR</div>
-                <div class="cost-val" id="r1_cost_water">Rp 0</div>
-              </div>
+              <div class="cost-item"><div class="title"><i class="fa-solid fa-bolt" style="color: var(--emerald);"></i> LISTRIK</div><div class="cost-val" id="r1_cost_elec">Rp 0</div></div>
+              <div class="cost-item"><div class="title"><i class="fa-solid fa-droplet" style="color: var(--cyan);"></i> AIR</div><div class="cost-val" id="r1_cost_water">Rp 0</div></div>
             </div>
-
-            <!-- SAKLAR SLIDE BOLA -->
-            <div class="relay-control-row">
-              <div class="relay-label">
-                <i class="fa-solid fa-lightbulb" style="color: var(--amber);"></i> Lampu
-              </div>
-              <label class="switch-slide-bola">
-                <input id="r1_lamp_sw" type="checkbox" onchange="toggleRelay(1, 'lamp', this.checked)">
-                <span class="ball-slider"></span>
-              </label>
-            </div>
-            <div class="relay-control-row">
-              <div class="relay-label">
-                <i class="fa-solid fa-plug" style="color: var(--brand-navy);"></i> Power
-              </div>
-              <label class="switch-slide-bola">
-                <input id="r1_power_sw" type="checkbox" onchange="toggleRelay(1, 'power', this.checked)">
-                <span class="ball-slider"></span>
-              </label>
-            </div>
+            <div class="relay-control-row"><div class="relay-label"><i class="fa-solid fa-lightbulb" style="color: var(--amber);"></i> Lampu</div><label class="switch-slide-bola"><input id="r1_lamp_sw" type="checkbox" onchange="toggleRelay(1, 'lamp', this.checked)"><span class="ball-slider"></span></label></div>
+            <div class="relay-control-row"><div class="relay-label"><i class="fa-solid fa-plug" style="color: var(--brand-navy);"></i> Power</div><label class="switch-slide-bola"><input id="r1_power_sw" type="checkbox" onchange="toggleRelay(1, 'outlet', this.checked)"><span class="ball-slider"></span></label></div>
           </div>
 
           <!-- ROOM 2 -->
           <div class="room-card" data-room="2">
-            <div class="room-card-header">
-              <div>
-                <h3>Room 2</h3>
-                <p>Utility Monitor · PZEM-004T #2</p>
-              </div>
-              <span class="listening-badge"><i class="fa-solid fa-circle" style="font-size: 0.45rem;"></i> LISTENING</span>
-            </div>
-
-            <!-- Meter Box Voltage & Current -->
+            <div class="room-card-header"><div><h3>Room 2</h3><p>Utility Monitor · PZEM-004T #2</p></div><span class="listening-badge"><i class="fa-solid fa-circle" style="font-size: 0.45rem;"></i> LISTENING</span></div>
             <div class="readout-duo">
-              <div class="dark-readout-tile">
-                <div class="metric-label">VOLTAGE</div>
-                <div class="metric-value meter-font"><span id="r2_volt">0.0</span><span class="metric-unit">V</span></div>
-              </div>
-              <div class="dark-readout-tile">
-                <div class="metric-label">CURRENT</div>
-                <div class="metric-value meter-font"><span id="r2_amp">0.00</span><span class="metric-unit">A</span></div>
-              </div>
+              <div class="dark-readout-tile"><div class="metric-label">VOLTAGE</div><div class="metric-value meter-font"><span id="r2_volt">0.0</span><span class="metric-unit">V</span></div></div>
+              <div class="dark-readout-tile"><div class="metric-label">CURRENT</div><div class="metric-value meter-font"><span id="r2_amp">0.00</span><span class="metric-unit">A</span></div></div>
             </div>
-
-            <!-- Mini Metrics: DAYA & ENERGI -->
             <div class="mini-metrics-duo">
-              <div class="mini-metric-card">
-                <div class="label"><i class="fa-regular fa-clock"></i> DAYA</div>
-                <div class="val"><span id="r2_watt">0.0</span> W</div>
-              </div>
-              <div class="mini-metric-card">
-                <div class="label"><i class="fa-solid fa-battery-half"></i> ENERGI</div>
-                <div class="val"><span id="r2_kwh">0.000</span> kWh</div>
-              </div>
+              <div class="mini-metric-card"><div class="label"><i class="fa-regular fa-clock"></i> DAYA</div><div class="val"><span id="r2_watt">0.0</span> W</div></div>
+              <div class="mini-metric-card"><div class="label"><i class="fa-solid fa-battery-half"></i> ENERGI</div><div class="val"><span id="r2_kwh">0.000</span> kWh</div></div>
             </div>
-
-            <!-- Gauge Indikator Beban Daya -->
-            <div class="load-bar-wrapper">
-              <div class="load-bar-label">Beban Daya (skala 0–900W)</div>
-              <div class="load-bar-track">
-                <div id="r2_loadbar" class="load-bar-fill"></div>
-              </div>
-            </div>
-
-            <!-- Estimasi Biaya: Listrik & Air -->
+            <div class="load-bar-wrapper"><div class="load-bar-label">Beban Daya (skala 0–900W)</div><div class="load-bar-track"><div id="r2_loadbar" class="load-bar-fill"></div></div></div>
             <div class="cost-split-row">
-              <div class="cost-item">
-                <div class="title"><i class="fa-solid fa-bolt" style="color: var(--emerald);"></i> LISTRIK</div>
-                <div class="cost-val" id="r2_cost_elec">Rp 0</div>
-              </div>
-              <div class="cost-item">
-                <div class="title"><i class="fa-solid fa-droplet" style="color: var(--cyan);"></i> AIR</div>
-                <div class="cost-val" id="r2_cost_water">Rp 0</div>
-              </div>
+              <div class="cost-item"><div class="title"><i class="fa-solid fa-bolt" style="color: var(--emerald);"></i> LISTRIK</div><div class="cost-val" id="r2_cost_elec">Rp 0</div></div>
+              <div class="cost-item"><div class="title"><i class="fa-solid fa-droplet" style="color: var(--cyan);"></i> AIR</div><div class="cost-val" id="r2_cost_water">Rp 0</div></div>
             </div>
-
-            <!-- SAKLAR SLIDE BOLA -->
-            <div class="relay-control-row">
-              <div class="relay-label">
-                <i class="fa-solid fa-lightbulb" style="color: var(--amber);"></i> Lampu
-              </div>
-              <label class="switch-slide-bola">
-                <input id="r2_lamp_sw" type="checkbox" onchange="toggleRelay(2, 'lamp', this.checked)">
-                <span class="ball-slider"></span>
-              </label>
-            </div>
-            <div class="relay-control-row">
-              <div class="relay-label">
-                <i class="fa-solid fa-plug" style="color: var(--brand-navy);"></i> Power
-              </div>
-              <label class="switch-slide-bola">
-                <input id="r2_power_sw" type="checkbox" onchange="toggleRelay(2, 'power', this.checked)">
-                <span class="ball-slider"></span>
-              </label>
-            </div>
+            <div class="relay-control-row"><div class="relay-label"><i class="fa-solid fa-lightbulb" style="color: var(--amber);"></i> Lampu</div><label class="switch-slide-bola"><input id="r2_lamp_sw" type="checkbox" onchange="toggleRelay(2, 'lamp', this.checked)"><span class="ball-slider"></span></label></div>
+            <div class="relay-control-row"><div class="relay-label"><i class="fa-solid fa-plug" style="color: var(--brand-navy);"></i> Power</div><label class="switch-slide-bola"><input id="r2_power_sw" type="checkbox" onchange="toggleRelay(2, 'outlet', this.checked)"><span class="ball-slider"></span></label></div>
           </div>
-
         </div>
 
-        <!-- SISTEM TANGKI AIR BERSAMA -->
+        <!-- TANK MONITORING -->
         <div class="panel-card">
           <div class="panel-card-header">
             <div class="panel-card-title">
               <div class="panel-card-icon cyan"><i class="fa-solid fa-faucet-drip"></i></div>
-              <div>
-                <h3 style="font-size: 1rem; font-weight: 800; color: var(--brand-navy);">Sistem Tangki Air Bersama (Ruang 1 &amp; 2)</h3>
-                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem;">HC-SR04 · Tinggi Tangki 23cm · Biaya Air Dibagi Proporsional</p>
-              </div>
+              <div><h3 style="font-size: 1rem; font-weight: 800; color: var(--brand-navy);">Sistem Tangki Air Bersama (Ruang 1 &amp; 2)</h3><p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem;">HC-SR04 · Tinggi Tangki 23cm · Biaya Air Dibagi Proporsional</p></div>
             </div>
             <span id="pumpStatusBadge" class="pill-btn" style="font-size: 0.72rem; font-weight: 700;">Pompa: IDLE</span>
           </div>
-
           <div class="tank-monitoring-content">
-            <div class="tank-sensor-metric">
-              <div class="label">Jarak Sensor (HC-SR04)</div>
-              <div class="val meter-font"><span id="tankDistance">0.0</span> <span style="font-size: 1.1rem; font-weight: 600;">cm</span></div>
-            </div>
+            <div class="tank-sensor-metric"><div class="label">Jarak Sensor (HC-SR04)</div><div class="val meter-font"><span id="tankDistance">0.0</span> <span style="font-size: 1.1rem; font-weight: 600;">cm</span></div></div>
             <div class="tank-visual-container">
               <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem;">Kapasitas Volume Tangki</div>
-              <div class="tank-box">
-                <div id="tankLiquidFill" class="tank-water-fill"></div>
-              </div>
+              <div class="tank-box"><div id="tankLiquidFill" class="tank-water-fill"></div></div>
               <div class="tank-percentage-text"><span id="tankPercentText">0</span>% Terisi</div>
             </div>
-            <div class="tank-cost-block">
-              <div class="label">Estimasi Biaya Air Total</div>
-              <div class="val" id="tankTotalCost">Rp 0</div>
-              <div class="sub" id="tankCostPerRoom">Biaya per Ruangan: Rp 0</div>
-            </div>
+            <div class="tank-cost-block"><div class="label">Estimasi Biaya Air Total</div><div class="val" id="tankTotalCost">Rp 0</div><div class="sub" id="tankCostPerRoom">Biaya per Ruangan: Rp 0</div></div>
           </div>
         </div>
 
-        <!-- RIWAYAT PEMAKAIAN -->
+        <!-- RIWAYAT -->
         <div class="panel-card">
           <div class="panel-card-header">
-            <div class="panel-card-title">
-              <div class="panel-card-icon emerald"><i class="fa-solid fa-chart-line"></i></div>
-              <div>
-                <h3 style="font-size: 1rem; font-weight: 800; color: var(--brand-navy);">Riwayat Pemakaian Listrik &amp; Air</h3>
-                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem;">Pencatatan otomatis interval telemetri lengkap tanggal &amp; jam</p>
-              </div>
-            </div>
-            <span class="pill-btn" style="font-size: 0.72rem;"><i class="fa-regular fa-clock"></i> Auto-log Realtime</span>
+            <div class="panel-card-icon emerald"><i class="fa-solid fa-chart-line"></i></div>
+            <div><h3 style="font-size: 1rem; font-weight: 800; color: var(--brand-navy);">Riwayat Pemakaian Listrik &amp; Air</h3></div>
           </div>
-
           <div class="history-table-wrapper">
             <table class="equilink-table">
-              <thead>
-                <tr>
-                  <th>TANGGAL &amp; JAM</th>
-                  <th>RUANGAN 1 — DAYA / ENERGI</th>
-                  <th>RUANGAN 2 — DAYA / ENERGI</th>
-                  <th>AIR — JARAK / STATUS POMPA</th>
-                </tr>
-              </thead>
-              <tbody id="telemetryHistoryTbody">
-                <tr>
-                  <td colspan="4" style="text-align: center; color: var(--text-light); padding: 1.5rem;">Belum ada data sensor tercatat.</td>
-                </tr>
-              </tbody>
+              <thead><tr><th>WAKTU</th><th>RUANGAN 1</th><th>RUANGAN 2</th><th>AIR</th></tr></thead>
+              <tbody id="telemetryHistoryTbody"><tr><td colspan="4" style="text-align: center; color: var(--text-light); padding: 1.5rem;">Memuat data...</td></tr></tbody>
             </table>
           </div>
         </div>
 
-        <!-- AI CONSULTANT & CHATBOT -->
+        <!-- AI CONSULTANT -->
         <div class="panel-card">
           <div class="panel-card-header">
-            <div class="panel-card-title">
-              <div class="panel-card-icon purple"><i class="fa-solid fa-brain"></i></div>
-              <div>
-                <h3 style="font-size: 1rem; font-weight: 800; color: var(--brand-navy);">AI Energy Consultant &amp; Chatbot</h3>
-                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.15rem;">Analisis otomatis &amp; asisten konsultasi keadilan energi (Gemini AI)</p>
-              </div>
-            </div>
+            <div class="panel-card-icon purple"><i class="fa-solid fa-brain"></i></div>
+            <div><h3 style="font-size: 1rem; font-weight: 800; color: var(--brand-navy);">AI Energy Consultant &amp; Chatbot</h3></div>
             <button class="btn-gradient-blue" onclick="triggerAutoAIAnalysis()"><i class="fa-solid fa-wand-magic-sparkles"></i> Analisis Otomatis</button>
           </div>
-
           <div id="aiChatWindow" class="ai-chatbox">
-            <div class="chat-bubble ai">
-              <b>🤖 EQUILINK AI:</b> Halo! Saya asisten energi cerdas Anda. Klik "Analisis Otomatis" untuk ringkasan pemakaian, atau tanyakan apa saja seputar tagihan dan efisiensi energi.
-            </div>
+            <div class="chat-bubble ai"><b>🤖 EQUILINK AI:</b> Halo! Saya asisten energi cerdas Anda. Silakan tanyakan apa saja seputar efisiensi energi.</div>
           </div>
-
           <div class="ai-input-row">
-            <input id="aiInputPrompt" placeholder="Tanyakan ke AI (contoh: Mengapa tagihan Ruang 1 lebih tinggi minggu ini?)" onkeypress="if(event.key==='Enter') sendAIChat()">
+            <input id="aiInputPrompt" placeholder="Tanyakan ke AI..." onkeypress="if(event.key==='Enter') sendAIChat()">
             <button class="btn-gradient-blue" onclick="sendAIChat()"><i class="fa-solid fa-paper-plane"></i> Kirim</button>
           </div>
         </div>
-
       </section>
 
-      <!-- ================= 2. PAGE: EDUCATION ================= -->
+      <!-- PAGE: EDUCATION -->
       <section id="page-education" class="app-page hidden">
         <div class="settings-grid">
-          
           <div class="config-card">
             <div class="config-title"><i class="fa-solid fa-book-open" style="color: var(--brand-blue);"></i> Materi Edukasi Efisiensi &amp; Keadilan Energi</div>
-            <div class="lessons-list">
-              <div class="lesson-item">
-                <b>1. Proportional Equity (Keadilan Proporsional)</b>
-                <p>Membagi tagihan kos atau asrama secara rata rata merugikan penghuni yang hemat. EQUILINK menghitung proporsi kWh dan liter air aktual tiap kamar sehingga pembagian beban 100% adil dan transparan.</p>
-              </div>
-              <div class="lesson-item">
-                <b>2. Vampir Listrik (Phantom Load)</b>
-                <p>Charger gadget dan adaptor yang terus menancap di stopkontak tetap mengonsumsi daya 5-15 Watt dalam kondisi standby. Manfaatkan saklar toggle Power di dashboard untuk memutus arus saat tidak terpakai.</p>
-              </div>
-              <div class="lesson-item">
-                <b>3. Efisiensi Pengisian Pompa Air</b>
-                <p>Pompa air memiliki arus kejut awal (inrush current) yang tinggi. Menjaga volume tangki di kisaran aman dan menghindari saklar pompa nyala-mati berulang kali dapat menghemat listrik pompa hingga 30%.</p>
-              </div>
-            </div>
+            <div id="educationLessons" class="lessons-list"></div>
           </div>
-
           <div class="config-card">
             <div class="config-title"><i class="fa-solid fa-circle-question" style="color: var(--purple);"></i> ECO Quiz Interaktif</div>
-            <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.8rem;">Uji pemahaman Anda seputar konsep keadilan energi bersama:</p>
             <div id="quizContainer">
-              <p style="font-weight: 700; font-size: 0.88rem; color: var(--brand-navy);" id="quizQuestionText">Jika Kamar 1 memakai 60 kWh dan Kamar 2 memakai 40 kWh, berapakah proporsi adil pembayaran Kamar 1?</p>
-              <div class="quiz-options-list">
-                <button class="quiz-opt-btn" onclick="checkQuizAnswer(0)">A. 50% (dibagi rata sama banyak)</button>
-                <button class="quiz-opt-btn" onclick="checkQuizAnswer(1)">B. 60% (sesuai proporsi konsumsi riil)</button>
-                <button class="quiz-opt-btn" onclick="checkQuizAnswer(2)">C. 75%</button>
-              </div>
+              <p style="font-weight: 700; font-size: 0.88rem; color: var(--brand-navy);" id="quizQuestionText"></p>
+              <div id="quizOptionsList" class="quiz-options-list"></div>
               <div id="quizResultMsg" style="margin-top: 0.85rem; font-size: 0.85rem; font-weight: 700;"></div>
             </div>
           </div>
-
         </div>
       </section>
 
-      <!-- ================= 3. PAGE: PAYMENT ================= -->
+      <!-- PAGE: PAYMENT -->
       <section id="page-payment" class="app-page hidden">
         <div class="payment-grid">
-          
-          <!-- Payment Room 1 -->
           <div class="payment-room-card" data-room="1">
             <h3>Tagihan Ruangan 1</h3>
-            <div class="payment-stat-line">
-              <span style="color: var(--text-muted);">Total Pembayaran Masuk</span>
-              <span style="color: var(--emerald); font-weight: 700;">- <span id="payR1_paid">Rp 0</span></span>
-            </div>
-            <div class="payment-stat-line sisa">
-              <span>Sisa Tagihan</span>
-              <span id="payR1_outstanding">Rp 0</span>
-            </div>
-
-            <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem;">
-              <input id="payInputR1" type="number" class="form-control" placeholder="Jumlah Bayar (Rp)">
-              <button class="btn-gradient-blue" onclick="processPayment(1)">Bayar</button>
-            </div>
-
-            <div class="relay-control-row" style="border-top: 1px solid var(--border-light); padding-top: 0.85rem;">
-              <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">Slide Reset Pelunasan Total</span>
-              <label class="switch-slide-bola">
-                <input type="checkbox" onchange="handleResetPelunasan(1, this)">
-                <span class="ball-slider"></span>
-              </label>
-            </div>
+            <div class="payment-stat-line"><span style="color: var(--text-muted);">Total Pembayaran Masuk</span><span style="color: var(--emerald); font-weight: 700;"><span id="payR1_paid">Rp 0</span></span></div>
+            <div class="payment-stat-line sisa"><span>Sisa Tagihan</span><span id="payR1_outstanding">Rp 0</span></div>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem;"><input id="payInputR1" type="number" class="form-control" placeholder="Jumlah Bayar (Rp)"><button class="btn-gradient-blue" onclick="processPayment(1)">Bayar</button></div>
           </div>
-
-          <!-- Payment Room 2 -->
           <div class="payment-room-card" data-room="2">
             <h3>Tagihan Ruangan 2</h3>
-            <div class="payment-stat-line">
-              <span style="color: var(--text-muted);">Total Pembayaran Masuk</span>
-              <span style="color: var(--emerald); font-weight: 700;">- <span id="payR2_paid">Rp 0</span></span>
-            </div>
-            <div class="payment-stat-line sisa">
-              <span>Sisa Tagihan</span>
-              <span id="payR2_outstanding">Rp 0</span>
-            </div>
-
-            <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem;">
-              <input id="payInputR2" type="number" class="form-control" placeholder="Jumlah Bayar (Rp)">
-              <button class="btn-gradient-blue" onclick="processPayment(2)">Bayar</button>
-            </div>
-
-            <div class="relay-control-row" style="border-top: 1px solid var(--border-light); padding-top: 0.85rem;">
-              <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">Slide Reset Pelunasan Total</span>
-              <label class="switch-slide-bola">
-                <input type="checkbox" onchange="handleResetPelunasan(2, this)">
-                <span class="ball-slider"></span>
-              </label>
-            </div>
+            <div class="payment-stat-line"><span style="color: var(--text-muted);">Total Pembayaran Masuk</span><span style="color: var(--emerald); font-weight: 700;"><span id="payR2_paid">Rp 0</span></span></div>
+            <div class="payment-stat-line sisa"><span>Sisa Tagihan</span><span id="payR2_outstanding">Rp 0</span></div>
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem;"><input id="payInputR2" type="number" class="form-control" placeholder="Jumlah Bayar (Rp)"><button class="btn-gradient-blue" onclick="processPayment(2)">Bayar</button></div>
           </div>
-
         </div>
-
-        <!-- Tabel Riwayat Pembayaran -->
         <div class="panel-card">
-          <div class="panel-card-header">
-            <div class="panel-card-title">
-              <div class="panel-card-icon cyan"><i class="fa-solid fa-clock-rotate-left"></i></div>
-              <div>
-                <h3 style="font-size: 1rem; font-weight: 800; color: var(--brand-navy);">Riwayat Transaksi &amp; Pembayaran Tagihan</h3>
-              </div>
-            </div>
-          </div>
+          <div class="panel-card-header"><div class="panel-card-title"><div class="panel-card-icon cyan"><i class="fa-solid fa-clock-rotate-left"></i></div><div><h3 style="font-size: 1rem; font-weight: 800; color: var(--brand-navy);">Riwayat Transaksi Pembayaran</h3></div></div></div>
           <div class="history-table-wrapper">
             <table class="equilink-table">
-              <thead>
-                <tr>
-                  <th>WAKTU / TANGGAL</th>
-                  <th>RUANGAN</th>
-                  <th>JUMLAH DIDEPOSITKAN</th>
-                  <th>SISA TAGIHAN BERJALAN</th>
-                  <th>KETERANGAN</th>
-                </tr>
-              </thead>
-              <tbody id="paymentHistoryTbody">
-                <tr>
-                  <td colspan="5" style="text-align: center; color: var(--text-light); padding: 1.5rem; font-style: italic;">
-                    Belum ada riwayat transaksi pembayaran.
-                  </td>
-                </tr>
-              </tbody>
+              <thead><tr><th>WAKTU</th><th>RUANGAN</th><th>JUMLAH</th><th>KETERANGAN</th></tr></thead>
+              <tbody id="paymentHistoryTbody"><tr><td colspan="4" style="text-align: center; color: var(--text-light); padding: 1.5rem;">Belum ada riwayat transaksi.</td></tr></tbody>
             </table>
           </div>
         </div>
-
       </section>
 
-      <!-- ================= 4. PAGE: ROOM SETTINGS ================= -->
+      <!-- PAGE: SETTINGS -->
       <section id="page-settings" class="app-page hidden">
         <div class="settings-grid">
-          
-          <!-- Tarif Berlaku -->
           <div class="config-card">
-            <div class="config-title">
-              <i class="fa-solid fa-tag" style="color: var(--emerald);"></i> Tarif Berlaku
-            </div>
-            <div class="rate-row">
-              <span class="label">Tarif Listrik / kWh</span>
-              <span class="value">Rp 1.444,70</span>
-            </div>
-            <div class="rate-row">
-              <span class="label">Tarif Air / detik pompa aktif</span>
-              <span class="value">Rp 37,50</span>
-            </div>
+            <div class="config-title"><i class="fa-solid fa-tag" style="color: var(--emerald);"></i> Tarif Berlaku</div>
+            <div class="rate-row"><span class="label">Tarif Listrik / kWh</span><span class="value">Rp 1.444,70</span></div>
+            <div class="rate-row"><span class="label">Tarif Air / detik</span><span class="value">Rp 37,50</span></div>
           </div>
-
-          <!-- Informasi Koneksi Jaringan IoT -->
           <div class="config-card">
-            <div class="config-title">
-              <i class="fa-solid fa-tower-broadcast" style="color: var(--brand-blue);"></i> Koneksi IoT MQTT
-            </div>
-            <p style="font-size: 0.8rem; line-height: 1.6; color: var(--text-muted);">
-              <b>Broker:</b> broker.emqx.io (WSS · port 8084)<br>
-              <span class="meter-font" style="font-size: 0.75rem; color: var(--brand-navy);">equilink/r1/elec, equilink/r2/elec</span> — telemetri listrik<br>
-              <span class="meter-font" style="font-size: 0.75rem; color: var(--brand-navy);">equilink/water</span> — sensor ultrasonik tangki air<br>
-              <span class="meter-font" style="font-size: 0.75rem; color: var(--brand-navy);">equilink/r1/lamp, r1/power, r2/lamp, r2/power</span> — kendali relay
-            </p>
-          </div>
-
-        </div>
-
-        <!-- Akun & Hak Akses -->
-        <div class="panel-card">
-          <div class="config-title" style="margin-bottom: 0.5rem;">
-            <i class="fa-solid fa-users" style="color: var(--brand-navy);"></i> Akun &amp; Hak Akses
-          </div>
-          <div class="accounts-grid">
-            <div class="account-card">
-              <div class="role-badge">ADMIN</div>
-              <div class="access-desc">Akses monitoring &amp; kontrol semua ruangan</div>
-            </div>
-            <div class="account-card">
-              <div class="role-badge">USER1</div>
-              <div class="access-desc">Akses terbatas Ruangan 1</div>
-            </div>
-            <div class="account-card">
-              <div class="role-badge">USER2</div>
-              <div class="access-desc">Akses terbatas Ruangan 2</div>
-            </div>
+            <div class="config-title"><i class="fa-solid fa-tower-broadcast" style="color: var(--brand-blue);"></i> Koneksi IoT MQTT</div>
+            <p style="font-size: 0.8rem; line-height: 1.6; color: var(--text-muted);"><b>Broker:</b> broker.emqx.io<br>Topik sinkron otomatis dengan ESP32 aktif.</p>
           </div>
         </div>
-
-        <!-- Tutup Periode & Siklus Baru -->
         <div class="panel-card" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
-          <div>
-            <h4 style="font-size: 0.95rem; font-weight: 800; color: var(--brand-navy);">Tutup Periode Penagihan Aktif</h4>
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">Menutup periode aktif tidak menghapus histori lama — hanya memulai perhitungan akumulasi kWh dan air baru.</p>
-          </div>
+          <div><h4 style="font-size: 0.95rem; font-weight: 800; color: var(--brand-navy);">Tutup Periode Penagihan Aktif</h4><p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem;">Memulai siklus perhitungan kWh dan air baru.</p></div>
           <button class="btn-gradient-blue" onclick="handleNewPeriod()"><i class="fa-solid fa-rotate"></i> Close &amp; Start New Period</button>
         </div>
-
       </section>
-
     </main>
   </div>
 
-  <!-- JAVASCRIPT LOGIC -->
   <script>
     let currentUser = null;
-    let telemetryTimer = null;
-
-    let localData = {
-      period: 'September 2026',
-      transactions: [],
-      historyLogs: [],
-      rooms: {
-        '1': {
-          voltage: 220.4,
-          current: 0.00,
-          power: 0.0,
-          energy_kwh: 0.000,
-          lamp: false,
-          powerSw: false,
-          paid: 0,
-          cost_elec: 0,
-          cost_water: 0
-        },
-        '2': {
-          voltage: 220.8,
-          current: 0.00,
-          power: 0.0,
-          energy_kwh: 0.000,
-          lamp: false,
-          powerSw: false,
-          paid: 0,
-          cost_elec: 0,
-          cost_water: 0
-        }
-      },
-      water: {
-        distance_cm: 18.5,
-        height_cm: 23,
-        level_percent: 45,
-        pump: 'IDLE',
-        total_cost: 0
-      }
-    };
+    let pollInterval = null;
 
     const $ = id => document.getElementById(id);
     const formatRp = num => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num || 0);
-
-    function formatDateNow() {
-      const d = new Date();
-      const options = { weekday: 'long', year: 'numeric', month: 'short', day: '2-digit' };
-      return d.toLocaleDateString('id-ID', options);
-    }
-
-    const dateEl = $('currentDateStr');
-    if (dateEl) dateEl.textContent = formatDateNow();
-
-    function fillLogin(u, p) {
-      $('loginUser').value = u;
-      $('loginPass').value = p;
-    }
 
     async function handleLogin() {
       const u = $('loginUser').value.trim();
       const p = $('loginPass').value.trim();
       $('loginErrMsg').textContent = '';
-
       try {
         const res = await fetch('/api/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username: u, password: p })
-        }).catch(() => null);
-
-        if (res && res.ok) {
-          const json = await res.json();
-          currentUser = json.user;
-        } else {
-          if (u === 'admin' && p === 'admin123') {
-            currentUser = { username: 'ADMIN', role: 'admin' };
-          } else if (u === 'user1' && p === 'user123') {
-            currentUser = { username: 'USER1', role: 'user', room: 1 };
-          } else if (u === 'user2' && p === 'user123') {
-            currentUser = { username: 'USER2', role: 'user', room: 2 };
-          } else {
-            throw new Error('Username atau password tidak cocok.');
-          }
-        }
-
-        $('loginSection').classList.add('hidden');
-        $('appSection').classList.remove('hidden');
-
-        $('loggedUserName').textContent = currentUser.username;
-        $('loggedUserRole').textContent = currentUser.role === 'admin' ? 'ADMINISTRATOR' : `ROOM ${currentUser.room}`;
-
-        if (currentUser.role !== 'admin') {
-          const setBtn = $('settingsNavBtn');
-          if (setBtn) setBtn.classList.add('hidden');
-          const otherRoom = currentUser.room === 1 ? 2 : 1;
-          document.querySelectorAll(`[data-room="${otherRoom}"]`).forEach(el => el.style.display = 'none');
-          $('statTotalRooms').textContent = '1';
-        }
-
-        refreshDashboard();
-        telemetryTimer = setInterval(updateTelemetrySim, 3000);
-
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || 'Login gagal');
+        currentUser = json.user;
+        initApp();
       } catch (err) {
-        $('loginErrMsg').textContent = err.message || 'Login gagal';
+        $('loginErrMsg').textContent = err.message;
       }
     }
 
-    function handleLogout() {
-      if (telemetryTimer) clearInterval(telemetryTimer);
-      fetch('/api/logout', { method: 'POST' }).catch(() => {});
+    async function handleLogout() {
+      if (pollInterval) clearInterval(pollInterval);
+      await fetch('/api/logout', { method: 'POST' }).catch(() => {});
       location.reload();
     }
 
-    function navTo(pageKey) {
-      document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = document.querySelector(`[data-nav="${pageKey}"]`);
-      if (activeBtn) activeBtn.classList.add('active');
-
-      document.querySelectorAll('.app-page').forEach(pg => pg.classList.add('hidden'));
-      const activePage = $(`page-${pageKey}`);
-      if (activePage) activePage.classList.remove('hidden');
-
-      const headings = {
-        dashboard: { title: 'Dashboard', sub: 'Monitoring realtime konsumsi listrik & air gedung' },
-        education: { title: 'Education & Equity', sub: 'Modul literasi hemat energi dan keadilan konsumsi bersama' },
-        payment: { title: 'Payment & Billing', sub: 'Pencatatan pembayaran tagihan & histori transaksi' },
-        settings: { title: 'Room Settings', sub: 'Konfigurasi tarif, kredensial, dan koneksi IoT' }
-      };
-
-      const meta = headings[pageKey] || { title: pageKey, sub: '' };
-      $('pageHeading').textContent = meta.title;
-      $('pageSubheading').textContent = meta.sub;
-
-      closeSidebar();
+    function initApp() {
+      $('loginSection').classList.add('hidden');
+      $('appSection').classList.remove('hidden');
+      $('loggedUserName').textContent = currentUser.username;
+      $('loggedUserRole').textContent = currentUser.role === 'admin' ? 'ADMINISTRATOR' : `ROOM ${currentUser.room}`;
+      if (currentUser.role !== 'admin') {
+        $('settingsNavBtn').classList.add('hidden');
+        const otherRoom = currentUser.room === 1 ? 2 : 1;
+        document.querySelectorAll(`[data-room="${otherRoom}"]`).forEach(el => el.style.display = 'none');
+        $('statTotalRooms').textContent = '1';
+      }
+      fetchState();
+      fetchHistory();
+      fetchPayments();
+      fetchEducation();
+      pollInterval = setInterval(() => { fetchState(); }, 3000);
     }
 
-    function toggleSidebar() {
-      $('mainSidebar').classList.toggle('open');
-      document.body.classList.toggle('sidebar-open');
+    async function fetchState() {
+      try {
+        const res = await fetch('/api/state');
+        if (!res.ok) return;
+        const data = await res.json();
+        
+        // Update Rooms
+        for (const [rId, rData] of Object.entries(data.rooms)) {
+          const s = rData.sensor || {};
+          const b = rData.bill || {};
+          if ($(`r${rId}_volt`)) {
+            $(`r${rId}_volt`).textContent = (s.voltage || 0).toFixed(1);
+            $(`r${rId}_amp`).textContent = (s.current || 0).toFixed(2);
+            $(`r${rId}_watt`).textContent = (s.power || 0).toFixed(1);
+            $(`r${rId}_kwh`).textContent = (s.energy_kwh || 0).toFixed(3);
+            $(`r${rId}_loadbar`).style.width = Math.min(100, Math.max(0, ((s.power || 0) / 900) * 100)) + '%';
+            $(`r${rId}_cost_elec`).textContent = formatRp(b.energy_cost);
+            $(`r${rId}_cost_water`).textContent = formatRp(b.water_cost);
+            $(`payR${rId}_paid`).textContent = formatRp(b.paid_amount);
+            $(`payR${rId}_outstanding`).textContent = formatRp((b.total_cost || 0) - (b.paid_amount || 0));
+          }
+        }
+
+        // Update Tank
+        const w = data.water || {};
+        if ($('tankDistance')) {
+          $('tankDistance').textContent = (w.distance_cm || 0).toFixed(1);
+          $('tankPercentText').textContent = Math.round(w.level_percent || 0);
+          $('tankLiquidFill').style.height = (w.level_percent || 0) + '%';
+        }
+      } catch (e) {}
     }
 
-    function closeSidebar() {
-      $('mainSidebar').classList.remove('open');
-      document.body.classList.remove('sidebar-open');
+    async function fetchHistory() {
+      try {
+        const res = await fetch('/api/history');
+        const data = await res.json();
+        const tbody = $('telemetryHistoryTbody');
+        if (data.rows && data.rows.length > 0) {
+          tbody.innerHTML = data.rows.map(r => `
+            <tr>
+              <td>${new Date(r.timestamp).toLocaleString('id-ID')}</td>
+              <td><b>Ruang ${r.room}</b></td>
+              <td class="meter-font">${r.power.toFixed(1)} W · ${r.energy_kwh.toFixed(3)} kWh</td>
+              <td class="meter-font">${r.voltage.toFixed(1)}V / ${r.current.toFixed(2)}A</td>
+            </tr>
+          `).join('');
+        }
+      } catch(e){}
+    }
+
+    async function fetchPayments() {
+      try {
+        const res = await fetch('/api/payments');
+        const data = await res.json();
+        const tbody = $('paymentHistoryTbody');
+        if (data.rows && data.rows.length > 0) {
+          tbody.innerHTML = data.rows.map(t => `
+            <tr>
+              <td>${new Date(t.timestamp).toLocaleString('id-ID')}</td>
+              <td><b>Ruang ${t.room}</b></td>
+              <td style="color:var(--emerald); font-weight:700;">+ ${formatRp(t.amount)}</td>
+              <td>${t.note}</td>
+            </tr>
+          `).join('');
+          $('statTransactionsCount').textContent = data.rows.length;
+        }
+      } catch(e){}
+    }
+
+    async function fetchEducation() {
+      try {
+        const res = await fetch('/api/education');
+        const data = await res.json();
+        if (data.lessons) {
+          $('educationLessons').innerHTML = data.lessons.map((l, i) => `
+            <div class="lesson-item"><b>${i+1}. ${l.title}</b><p>${l.body}</p></div>
+          `).join('');
+        }
+        if (data.quiz && data.quiz.length > 0) {
+          const q = data.quiz[0];
+          $('quizQuestionText').textContent = q.q;
+          $('quizOptionsList').innerHTML = q.options.map((opt, idx) => `
+            <button class="quiz-opt-btn" onclick="checkQuizAnswer(${idx}, ${q.answer})">${opt}</button>
+          `).join('');
+        }
+      } catch(e){}
+    }
+
+    function checkQuizAnswer(selected, correct) {
+      const res = $('quizResultMsg');
+      if (selected === correct) {
+        res.innerHTML = '<span style="color: var(--emerald);">✓ Jawaban Anda Benar!</span>';
+      } else {
+        res.innerHTML = '<span style="color: var(--rose);">✗ Kurang tepat, silakan coba lagi.</span>';
+      }
     }
 
     async function toggleRelay(room, device, state) {
-      localData.rooms[String(room)][device === 'lamp' ? 'lamp' : 'powerSw'] = state;
-
       await fetch('/api/relay', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ room, device, state })
       }).catch(() => {});
-
-      calculateInstantLoad(room);
     }
 
-    function calculateInstantLoad(room) {
-      const r = localData.rooms[String(room)];
-      let watt = 0;
-      if (r.lamp) watt += 45 + Math.random() * 5;
-      if (r.powerSw) watt += 180 + Math.random() * 20;
-
-      r.power = watt;
-      r.current = watt > 0 ? (watt / r.voltage) : 0;
-      updateRoomUI(room);
-    }
-
-    function updateTelemetrySim() {
-      [1, 2].forEach(rm => {
-        const r = localData.rooms[String(rm)];
-        r.voltage = 220 + (Math.random() * 3 - 1.5);
-        if (r.lamp || r.powerSw) {
-          calculateInstantLoad(rm);
-          r.energy_kwh += (r.power / 1000) * (3 / 3600);
-          r.cost_elec = r.energy_kwh * 1444.70;
-        } else {
-          r.power = 0;
-          r.current = 0;
-        }
-        updateRoomUI(rm);
-      });
-
-      const w = localData.water;
-      w.distance_cm = Math.max(2, Math.min(23, (w.distance_cm + (Math.random() * 0.4 - 0.2))));
-      w.level_percent = Math.round(((w.height_cm - w.distance_cm) / w.height_cm) * 100);
-      w.total_cost = 12500 + Math.round(w.level_percent * 40);
-      localData.rooms['1'].cost_water = w.total_cost / 2;
-      localData.rooms['2'].cost_water = w.total_cost / 2;
-
-      updateTankUI();
-
-      if (Math.random() > 0.6) {
-        pushHistoryRow();
-      }
-    }
-
-    function updateRoomUI(rm) {
-      const r = localData.rooms[String(rm)];
-      const vEl = $(`r${rm}_volt`);
-      if (!vEl) return;
-
-      vEl.textContent = r.voltage.toFixed(1);
-      $(`r${rm}_amp`).textContent = r.current.toFixed(2);
-      $(`r${rm}_watt`).textContent = r.power.toFixed(1);
-      $(`r${rm}_kwh`).textContent = r.energy_kwh.toFixed(3);
-
-      $(`r${rm}_cost_elec`).textContent = formatRp(r.cost_elec);
-      $(`r${rm}_cost_water`).textContent = formatRp(r.cost_water);
-
-      const pct = Math.min(100, Math.max(0, (r.power / 900) * 100));
-      $(`r${rm}_loadbar`).style.width = pct + '%';
-
-      const totalBill = r.cost_elec + r.cost_water;
-      const sisa = Math.max(0, totalBill - r.paid);
-      const paidEl = $(`payR${rm}_paid`);
-      if (paidEl) paidEl.textContent = formatRp(r.paid);
-      const outEl = $(`payR${rm}_outstanding`);
-      if (outEl) outEl.textContent = formatRp(sisa);
-    }
-
-    function updateTankUI() {
-      const w = localData.water;
-      const distEl = $('tankDistance');
-      if (!distEl) return;
-
-      distEl.textContent = w.distance_cm.toFixed(1);
-      $('tankPercentText').textContent = w.level_percent;
-      $('tankLiquidFill').style.height = w.level_percent + '%';
-      $('tankTotalCost').textContent = formatRp(w.total_cost);
-      $('tankCostPerRoom').textContent = `Biaya per Ruangan: ${formatRp(w.total_cost / 2)}`;
-      $('pumpStatusBadge').textContent = `Pompa: ${w.pump}`;
-    }
-
-    function refreshDashboard() {
-      updateRoomUI(1);
-      updateRoomUI(2);
-      updateTankUI();
-    }
-
-    function resetTelemetry() {
-      [1, 2].forEach(rm => {
-        localData.rooms[String(rm)].energy_kwh = 0;
-        localData.rooms[String(rm)].cost_elec = 0;
-        localData.rooms[String(rm)].cost_water = 0;
-        localData.rooms[String(rm)].paid = 0;
-      });
-      refreshDashboard();
-      alert('Semua akumulasi energi dan tagihan berhasil direset.');
-    }
-
-    function pushHistoryRow() {
-      const now = new Date();
-      const timeStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ', ' +
-                      now.toTimeString().split(' ')[0];
-
-      const r1 = localData.rooms['1'];
-      const r2 = localData.rooms['2'];
-      const w = localData.water;
-
-      const log = {
-        time: timeStr,
-        r1: `${r1.power.toFixed(1)} W · ${r1.energy_kwh.toFixed(3)} kWh`,
-        r2: `${r2.power.toFixed(1)} W · ${r2.energy_kwh.toFixed(3)} kWh`,
-        air: `${w.distance_cm.toFixed(1)} cm / ${w.pump}`
-      };
-
-      localData.historyLogs.unshift(log);
-      if (localData.historyLogs.length > 15) localData.historyLogs.pop();
-
-      renderHistoryTable();
-    }
-
-    function renderHistoryTable() {
-      const tbody = $('telemetryHistoryTbody');
-      if (!tbody || !localData.historyLogs.length) return;
-
-      tbody.innerHTML = localData.historyLogs.map(item => `
-        <tr>
-          <td style="font-weight:600;">${item.time}</td>
-          <td class="meter-font">${item.r1}</td>
-          <td class="meter-font">${item.r2}</td>
-          <td><span style="color:var(--cyan); font-weight:600;">${item.air}</span></td>
-        </tr>
-      `).join('');
-    }
-
-    function processPayment(room) {
+    async function processPayment(room) {
       const input = $(`payInputR${room}`);
-      const val = parseFloat(input.value);
-      if (!val || val <= 0) {
-        alert('Masukkan nominal pembayaran yang valid.');
+      const amount = parseFloat(input.value);
+      if (!amount || amount <= 0) {
+        alert('Masukkan nominal valid');
         return;
       }
-
-      localData.rooms[String(room)].paid += val;
-      input.value = '';
-
-      const now = new Date();
-      const timeStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' + now.toTimeString().split(' ')[0];
-
-      const r = localData.rooms[String(room)];
-      const sisa = Math.max(0, (r.cost_elec + r.cost_water) - r.paid);
-
-      const txn = {
-        time: timeStr,
-        room: `Ruang ${room}`,
-        amount: formatRp(val),
-        sisa: formatRp(sisa),
-        ket: 'Pembayaran Dikonfirmasi'
-      };
-
-      localData.transactions.unshift(txn);
-      const txCount = $('statTransactionsCount');
-      if (txCount) txCount.textContent = localData.transactions.length;
-
-      renderPaymentTable();
-      refreshDashboard();
-      alert(`Pembayaran ${formatRp(val)} untuk Ruang ${room} berhasil disimpan.`);
-    }
-
-    function handleResetPelunasan(room, checkbox) {
-      if (checkbox.checked) {
-        const r = localData.rooms[String(room)];
-        r.paid = r.cost_elec + r.cost_water;
-        refreshDashboard();
-        setTimeout(() => {
-          checkbox.checked = false;
-        }, 1000);
+      const res = await fetch('/api/payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ room, amount, note: 'Pembayaran Dashboard' })
+      });
+      if (res.ok) {
+        input.value = '';
+        fetchState();
+        fetchPayments();
+        alert('Pembayaran berhasil dicatat.');
+      } else {
+        alert('Gagal memproses pembayaran.');
       }
     }
 
-    function renderPaymentTable() {
-      const tbody = $('paymentHistoryTbody');
-      if (!tbody || !localData.transactions.length) return;
-
-      tbody.innerHTML = localData.transactions.map(t => `
-        <tr>
-          <td>${t.time}</td>
-          <td><b>${t.room}</b></td>
-          <td style="color: var(--emerald); font-weight:700;">+ ${t.amount}</td>
-          <td style="color: var(--amber); font-weight:700;">${t.sisa}</td>
-          <td><span class="pill-btn" style="padding:0.2rem 0.6rem; font-size:0.7rem;">${t.ket}</span></td>
-        </tr>
-      `).join('');
+    async function sendAIChat() {
+      const inp = $('aiInputPrompt');
+      const prompt = inp.value.trim();
+      if (!prompt) return;
+      appendChat('Anda', prompt, false);
+      inp.value = '';
+      const loading = appendChat('🤖 EQUILINK AI', 'Menganalisis...', true);
+      try {
+        const res = await fetch('/api/ai', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: prompt })
+        });
+        const json = await res.json();
+        loading.innerHTML = `<b>🤖 EQUILINK AI:</b> ${(json.answer || json.error).replace(/\n/g, '<br>')}`;
+      } catch(e) {
+        loading.innerHTML = `<b>🤖 EQUILINK AI:</b> Gagal menghubungi server AI.`;
+      }
     }
 
-    function appendAIChatMessage(sender, text, isAi = false) {
+    function appendChat(sender, text, isAi) {
       const win = $('aiChatWindow');
       const div = document.createElement('div');
       div.className = `chat-bubble ${isAi ? 'ai' : 'user'}`;
@@ -2041,72 +614,30 @@
       return div;
     }
 
-    async function sendAIChat() {
-      const inp = $('aiInputPrompt');
-      const prompt = inp.value.trim();
-      if (!prompt) return;
-
-      appendAIChatMessage('Anda', prompt, false);
-      inp.value = '';
-
-      const loadingMsg = appendAIChatMessage('🤖 EQUILINK AI', 'Menganalisis data konsumsi kamar...', true);
-
-      try {
-        const res = await fetch('/api/ai', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ query: prompt })
-        }).catch(() => null);
-
-        if (res && res.ok) {
-          const json = await res.json();
-          loadingMsg.innerHTML = `<b>🤖 EQUILINK AI:</b> ${json.answer.replace(/\n/g, '<br>')}`;
-        } else {
-          setTimeout(() => {
-            let reply = "Berdasarkan sensor EQUILINK terkini, pasokan tegangan listrik PLN normal di 220V. ";
-            if (prompt.toLowerCase().includes('ruang 1') || prompt.toLowerCase().includes('kamar 1')) {
-              reply += `Beban aktif Ruang 1 saat ini adalah ${localData.rooms['1'].power.toFixed(1)}W dengan akumulasi ${localData.rooms['1'].energy_kwh.toFixed(3)} kWh. Disarankan menonaktifkan saklar Power saat meninggalkan kamar guna menghindari konsumsi phantom load.`;
-            } else if (prompt.toLowerCase().includes('air')) {
-              reply += `Ketinggian air tangki saat ini ${localData.water.level_percent}%. Biaya dibagi secara proporsional dan adil antar kedua ruangan.`;
-            } else {
-              reply += "Tips efisiensi: pastikan lampu dimatikan saat siang hari dan gunakan saklar toggle Power untuk mematikan perangkat elektronik yang tidak digunakan secara total.";
-            }
-            loadingMsg.innerHTML = `<b>🤖 EQUILINK AI:</b> ${reply}`;
-          }, 700);
-        }
-      } catch (err) {
-        loadingMsg.innerHTML = `<b>🤖 EQUILINK AI:</b> Terjadi kendala koneksi ke server AI.`;
-      }
-    }
-
     function triggerAutoAIAnalysis() {
-      $('aiInputPrompt').value = 'Berikan ringkasan analisis efisiensi energi dan air kedua kamar saat ini.';
+      $('aiInputPrompt').value = 'Berikan analisis ringkas efisiensi energi saat ini.';
       sendAIChat();
     }
 
-    function checkQuizAnswer(selectedIdx) {
-      const res = $('quizResultMsg');
-      if (selectedIdx === 1) {
-        res.innerHTML = '<span style="color: var(--emerald);">✓ Benar! Prinsip Proportional Equity membagi beban sesuai konsumsi riil (60:40) sehingga tidak merugikan pihak lain.</span>';
-      } else {
-        res.innerHTML = '<span style="color: var(--rose);">✗ Kurang tepat. Membagi rata sama banyak akan membebankan pemborosan satu pihak kepada penghuni yang hemat.</span>';
+    async function handleNewPeriod() {
+      if (confirm('Tutup periode dan mulai siklus baru?')) {
+        await fetch('/api/period/new', { method: 'POST' });
+        location.reload();
       }
     }
 
-    function handleNewPeriod() {
-      if (confirm('Tutup periode penagihan aktif saat ini dan mulai siklus baru?')) {
-        [1, 2].forEach(rm => {
-          localData.rooms[String(rm)].energy_kwh = 0;
-          localData.rooms[String(rm)].cost_elec = 0;
-          localData.rooms[String(rm)].cost_water = 0;
-          localData.rooms[String(rm)].paid = 0;
-        });
-        refreshDashboard();
-        alert('Periode baru berhasil dimulai.');
-      }
+    function resetTelemetry() { alert('Fitur reset telemetri diatur via server/periode baru.'); }
+
+    function navTo(key) {
+      document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
+      document.querySelector(`[data-nav="${key}"]`).classList.add('active');
+      document.querySelectorAll('.app-page').forEach(p => p.classList.add('hidden'));
+      $(`page-${key}`).classList.remove('hidden');
     }
 
-    pushHistoryRow();
+    function toggleSidebar() { $('mainSidebar').classList.toggle('open'); document.body.classList.toggle('sidebar-open'); }
+    function closeSidebar() { $('mainSidebar').classList.remove('open'); document.body.classList.remove('sidebar-open'); }
+    function fillLogin(u, p) { $('loginUser').value = u; $('loginPass').value = p; }
   </script>
 </body>
 </html>
